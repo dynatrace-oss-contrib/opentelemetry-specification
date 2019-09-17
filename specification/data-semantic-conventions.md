@@ -53,7 +53,7 @@ and has a lower cardinality than the URI path or route, this value MUST be used 
 | Attribute name | Notes and examples                                           | Required? |
 | :------------- | :----------------------------------------------------------- | --------- |
 | `component`    | Denotes the type of the span and needs to be `"http"`. | Yes |
-| `http.method` | HTTP request method. E.g. `"GET"`. Original casing or ALL-CAPS if unknown. | Yes |
+| `http.method` | HTTP request method. E.g. `"GET"`. | Yes |
 | `http.url` | HTTP URL of this request, represented as `scheme://host:port/path?query#fragment` E.g. `"https://example.com:779/path/12314/?q=ddds#123"`. | Yes |
 | `http.route` | The matched route. E.g. `"/users/:userID?"`. | No |
 | `http.status_code` | [HTTP response status code](https://tools.ietf.org/html/rfc7231). E.g. `200` (integer) | No |
@@ -102,17 +102,17 @@ attribute names.
 | Attribute name | Notes and examples                                           | Required? |
 | :------------- | :----------------------------------------------------------- | --------- |
 | `component` | Always the string `"db"` | Yes       |
-| `db.url` | The connection string used to connect to the database | Yes       |
 | `db.type`      | Database type. For any SQL database, `"sql"`. For others, the lower-case database category, e.g. `"cassandra"`, `"hbase"`, or `"redis"`. | Yes       |
 | `db.instance`  | Database instance name. E.g., In Java, if the jdbc.url=`"jdbc:mysql://db.example.com:3306/customers"`, the instance name is `"customers"`. | Yes     |
 | `db.statement` | A database statement for the given database type. Note, that the value may be sanitized to exclude sensitive information. E.g., for `db.type="sql"`, `"SELECT * FROM wuser_table"`; for `db.type="redis"`, `"SET mykey 'WuValue'"`. | Yes       |
+| `db.url` | The connection string used to connect to the database | Yes       |
 | `db.clientlib` | Database driver name or database client library name (when known), e.g., `"JDBI"`, `"jdbc"`, `"odbc"`, `"com.example.postresclient"`. | No       |
-| `db.tech` | Database technology, e.g. `"Postgres SQL"`, `"sqlite"`, `""` | No       |
+| `db.tech` | Database technology, e.g. `"PostgreSQL"`, `"SQLite"`, `"SQL Server"` | No       |
 | `db.resultcount` | An integer specifying the number of results returned. | No       |
 | `db.roundtripcount` | An integer specifying the number of network roundtrips while executing the request. | No       |
 | `db.user`      | Username for accessing database. E.g., `"readonly_user"` or `"reporting_user"` | No        |
 
-Additionally the `peer.name` attribute from the [network attributes][] is required.
+Additionally the `peer.name` attribute from the [network attributes][] is required and `peer.ip` and `peer.port` are recommended.
 
 ## General RPC
 
@@ -142,7 +142,7 @@ Additionally, the `peer.hostname` and `peer.port` [network attributes][] are req
 
 ## gRPC
 
-gRPC is a special case of [RPC spans][#rpc] but has additional conventions described in this section.
+gRPC is a special case of [RPC spans](#rpc) but has additional conventions described in this section.
 
 ### Status
 
