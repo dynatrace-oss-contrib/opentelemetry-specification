@@ -14,28 +14,37 @@ This way, the operator will not need to learn specifics of a language and
 telemetry collected from multi-language micro-service can still be easily
 correlated and cross-analyzed.
 
-## HTTP client
+## HTTP Spans
 
-This span type represents an outbound HTTP request.
-
-For a HTTP client span, `SpanKind` MUST be `Client`.
+This span types represents HTTP requests. They can be used for http and https
+schemes and various HTTP versions like 1.1, 2 and SPDY.
 
 Given an [RFC 3986](https://www.ietf.org/rfc/rfc3986.txt) compliant URI of the form
 `scheme:[//authority]path[?query][#fragment]`, the span name of the span SHOULD
 be set to to the URI path value.
 
-If a framework can identify a value that represents the identity of the request
-and has a lower cardinality than the URI path, this value MUST be used for the span name instead.
+If a value that represents the identity of the request
+and has a lower cardinality than the URI path can be identified, this value MUST
+be used for the span name instead.
 
 | Attribute name | Notes and examples                                           | Required? |
 | :------------- | :----------------------------------------------------------- | --------- |
 | `component`    | Denotes the type of the span and needs to be `"http"`. | Yes |
 | `http.method` | HTTP request method. E.g. `"GET"`. | Yes |
-| `http.url` | HTTP URL of this request, represented as `scheme://host:port/path?query#fragment` E.g. `"https://example.com:779/path/12314/?q=ddds#123"`. | Yes |
+| `http.url` | Full HTTP request URL in the form `scheme://host:port/path?query#fragment`. Usually the fragment is not transmitted over HTTP, but if it is known, it should be included nevertheless. | Defined later. |
 | `http.status_code` | [HTTP response status code](https://tools.ietf.org/html/rfc7231). E.g. `200` (integer) | No |
 | `http.status_text` | [HTTP reason phrase](https://www.ietf.org/rfc/rfc2616.txt). E.g. `"OK"` | No |
+| `http.flavor` | Kind of HTTP protocol used: `"1.0"`, `"1.1"`, `"2"`, `"SPDY"` or `"QUIC"`. |  If not TCP-based (`QUIC`). |
 
-It is recommended to also use the general [network attributes][], especially `peer.ip` and `peer.name`.
+It is recommended to also use the general [network attributes][], especially `peer.ip`. If `sock.transport` is not specified, it can be assumed to be `IP.TCP` except if `http.flavor` is `QUIC`, in which case `IP.UDP` is assumed.
+
+### HTTP client
+
+This span type represents an outbound HTTP request.
+
+For a HTTP client span, `SpanKind` MUST be `Client`.
+
+`http.url` is required and represents the HTTP URL used to (initially) make this request.
 
 ## HTTP server
 
@@ -45,44 +54,56 @@ For a HTTP server span, `SpanKind` MUST be `Server`.
 
 Given an inbound request for a route (e.g. `"/users/:userID?"` the `name` attribute of the span SHOULD be set to this route. If the route does not include the application root path, it SHOULD be prepended to the span name.
 
-If the route can not be determined, the `name` attribute MUST be set to the [RFC 3986 URI](https://www.ietf.org/rfc/rfc3986.txt) path value.
-
-If a framework can identify a value that represents the identity of the request
-and has a lower cardinality than the URI path or route, this value MUST be used for the span name instead.
+If the route can not be determined, the `name` attribute MUST be set as defined in the general semantic conventions for HTTP.
 
 | Attribute name | Notes and examples                                           | Required? |
 | :------------- | :----------------------------------------------------------- | --------- |
-| `component`    | Denotes the type of the span and needs to be `"http"`. | Yes |
-| `http.method` | HTTP request method. E.g. `"GET"`. | Yes |
-| `http.url` | HTTP URL of this request, represented as `scheme://host:port/path?query#fragment` E.g. `"https://example.com:779/path/12314/?q=ddds#123"`. | Yes |
-| `http.route` | The matched route. E.g. `"/users/:userID?"`. | No |
-| `http.status_code` | [HTTP response status code](https://tools.ietf.org/html/rfc7231). E.g. `200` (integer) | No |
-| `http.status_text` | [HTTP reason phrase](https://www.ietf.org/rfc/rfc2616.txt). E.g. `"OK"` | No |
+| `http.target` | The full request target as passed in a [HTTP request line][] or equivalent, e.g. `/path/12314/?q=ddds#123"`. | [1] |
+| `http.host` | The value of the HTTP host header. | [1] |
+| `http.scheme` | The URI scheme identifying the used protocol: `"http"` or `"https"` | [1] |
+| `http.server_name` | The server name (not including port). This should be obtained via configuration. If no such configuration can be obtained, this attribute MUST NOT be set (`host.name` from the [network attributes][] should be used instead). | [1] |
+| `http.route` | The matched route (path template). E.g. `"/users/:userID?"`. | No |
 | `http.app` | An identifier for the whole HTTP application. E.g. Flask app name, `spring.application.name`, etc. | No |
 | `http.app_root` |The path prefix of the URL that identifies this `http.app`. If multiple roots exist, the one that was matched in the current URL should be used. | No |
-| `http.client_ip` | The IP address of the original client behind all proxies, if known. For syntax, see `peer.ip`. | No |
+| `http.client_ip` | The IP address of the original client behind all proxies, if known (e.g. from [X-Forwarded-For][]). For syntax, see `peer.ip`. | No |
 
-It is recommended to also use the general [network attributes][], especially `peer.ip` and `host.name` as well as the `code.ns` and `code.func` [code attributes][] to name the logical handler method (`code.ns` + `code.func` will have a lower cardinality than `http.route`).
+[HTTP request line]: https://tools.ietf.org/html/rfc7230#section-3.1.1
+[X-Forwarded-For]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For
 
-As an example, if a browser request for `https://example.com/webshop/articles/4` is invoked, we may have:
+**[1]**: `http.url` is usually not readily available on the server side but would have to be assembled in a cumbersome and sometimes lossy process from other information (see e.g. <https://github.com/open-telemetry/opentelemetry-python/pull/148>). It is thus preferred to supply the raw data that *is* available. Namely, one of the following sets is required (in order of preference):
+
+* `http.scheme`, `http.host`, `http.target`
+* `http.scheme`, `http.server_name`, `host.port`, `http.target`
+* `http.scheme`, `host.name`, `host.port`, `http.target`
+* `http.url`
+
+Of course, more than the required attributes can be supplied, but this is recommended only if they cannot be inferred from the sent ones. For example, `http.server_name` might be valuable in a scenario where multiple "virtual" hosts are served by a server under the same IP.
+
+It is recommended to also use the `code.ns` and `code.func` [code attributes][] to name the logical handler method (`code.ns` + `code.func` will have a lower cardinality than `http.route`).
+
+As an example, if a browser request for `https://example.com:8080/webshop/articles/4?s=1` is invoked, we may have:
 
 Span name: `/webshop/articles/:article_id` (`app_root` + `route`).
 
-|   Attribute name   |                      Value                      |
-| :----------------- | :---------------------------------------------- |
-| `component`        | `"http"`                                        |
-| `http.method`      | `"GET"`                                         |
-| `http.url`         | `"https://example.com/webshop/articles/4"`      |
-| `http.route`       | `/articles/:article_id` (note that the `app_root` part is missing in this case) |
-| `http.status_code` | `200`                                           |
-| `http.status_text` | `"OK"`                                          |
-| `http.app`         | E.g., `"My cool WebShop"` or `"my.webshop`"     |
-| `http.app_root`    | `"/webshop"`                                    |
-| `http.client_ip`   | `"192.0.2.4"`                                   |
-| `peer.ip`          | `"192.0.2.5"` (the client goes through a proxy) |
-| `host.name`        | `"example.com"`                                 |
-| `code.ns`          | `"com.example.webshop.ArticleService"`          |
-| `code.func`        | `"showArticleDetails"`                          |
+|   Attribute name   |                                       Value                                       |
+| :----------------- | :-------------------------------------------------------------------------------- |
+| `component`        | `"http"`                                                                          |
+| `http.method`      | `"GET"`                                                                           |
+| `http.url`         | `"https://example.com:8080/webshop/articles/4?s=1"` (or not set)                  |
+| `http.target`      | `"/webshop/articles/4?s=1"`                                                       |
+| `http.host`        | `"example.com:8080"`                                                              |
+| `http.server_name` | `"example.org"` (in that case, the canonical server name does not match the host) |
+| `host.port`        | `8080`                                                                            |
+| `http.scheme`      | `"https"`                                                                         |
+| `http.route`       | `"/articles/:article_id"` (note that the `app_root` part is missing in this case)   |
+| `http.status_code` | `200`                                                                             |
+| `http.status_text` | `"OK"`                                                                            |
+| `http.app`         | E.g., `"My cool WebShop"` or `"com.example.webshop"`                                       |
+| `http.app_root`    | `"/webshop"`                                                                      |
+| `http.client_ip`   | `"192.0.2.4"`                                                                     |
+| `peer.ip`          | `"192.0.2.5"` (the client goes through a proxy)                                   |
+| `code.ns`          | `"com.example.webshop.ArticleService"`                                            |
+| `code.func`        | `"showArticleDetails"`                                                            |
 
 Note that a naive implementation might set `code.ns` = `com.example.mywebframework.HttpDispatcherServlet` and `code.func` = `service`. If possible, this should be avoided and the logically responsible more specific handler method should be used, even if the span is actually started and ended in the web framework (integration).
 
@@ -114,7 +135,11 @@ attribute names.
 
 Additionally the `peer.name` attribute from the [network attributes][] is required and `peer.ip` and `peer.port` are recommended.
 
-## General RPC
+[rpc]: #remote-procedure-calls
+
+## Remote procedure calls
+
+Also known as Remote Method Invocation (RMI).
 
 Implementations MUST create a span, when the RPC call starts, one for
 client-side and one for server-side. Outgoing requests should be a span `kind`
@@ -132,17 +157,17 @@ Examples of span name: `grpc.test.EchoService/Echo`.
 
 ### Attributes
 
-| Attribute name |                          Notes and examples                           | Required? |
-| -------------- | --------------------------------------------------------------------- | --------- |
-| `rpc.service`  | The service name, must be equal to the $service part in the span name | Yes       |
-| `rpc.method`   | The $method part in the span name.                                    | No        |
+| Attribute name |                          Notes and examples                            | Required? |
+| -------------- | ---------------------------------------------------------------------- | --------- |
+| `rpc.service`  | The service name, must be equal to the $service part in the span name. | Yes       |
+| `rpc.method`   | The $method part in the span name.                                     | No        |
 | `rpc.flavor`   | The remoting protocol name if it is widely-used, otherwise the library or framework name. E.g. `"grpc"` | Yes       |
 
 Additionally, the `peer.hostname` and `peer.port` [network attributes][] are required.
 
 ## gRPC
 
-gRPC is a special case of [RPC spans](#rpc) but has additional conventions described in this section.
+gRPC is a special case of [RPC spans][rpc] but has additional conventions described in this section.
 
 ### Status
 
@@ -180,9 +205,15 @@ the values will be consistent between different implementations. In case of
 unary calls only one sent and one received message will be recorded for both
 client and server spans.
 
+## General attributes
+
+The attributes described in this section are not specific to a particular operation but rather generic.
+They may be used in any Span they apply to.
+Particular operations may refer to or require some of these attributes.
+
 [code attributes]: #general-code-attributes
 
-## General code attributes
+### General source code attributes
 
 Often a Span is tied closely to a certain unit of code, for example the function that handles an HTTP request. In that case, it makes sense to add the name of the function that is logically responsible for handling the operation that traces the span (usually the method that starts the span) to the span attributes as follows:
 
@@ -196,7 +227,7 @@ Often a Span is tied closely to a certain unit of code, for example the function
 
 [network attributes]: #general-network-connection-attributes
 
-## General network connection attributes
+### General network connection attributes
 
 These attributes may be used for any network related operation.
 
@@ -208,9 +239,9 @@ These attributes may be used for any network related operation.
 | `peer.name`      | Remote hostname or similar, see note below.                                        |
 | `host.ip`        | Like `peer.ip` but for the host IP. Useful in case of a multi-IP host.             |
 | `host.port`      | Like `peer.port` but for the host port.                                            |
-| `host.name`      | Like `peer.name` but for the host name. If known, the name that the client used to connect should be preferred.   |
+| `host.name`      | Like `peer.name` but for the host name. If known, the name that the client used to connect should be preferred. For IP-based communication, an value otbained via an API like POSIX `gethostname` may be used as fallback.  |
 
-**peer.name**: For IP-based communication, the name should be the host name that was used to look up the IP adress in `peer.ip` (e.g., `"example.com"` if connecting to an URL `https://example.com/foo`). If that is not available, reverse-lookup of the IP can be used to obtain it. If `sock.transport` is `"unix"` or `"pipe"`, the absolute path to the file representing it should be used. If there is no such file (e.g., anonymous pipe), the name should explicitly be set to the empty string to distinguish it from the case where the name is just unknown or not covered by the instrumentation.
+**peer.name**, **host.name**: For IP-based communication, the name should be the host name that was used to look up the IP adress in `peer.ip` (e.g., `"example.com"` if connecting to an URL `https://example.com/foo`). If that is not available, reverse-lookup of the IP can be used to obtain it. If `sock.transport` is `"unix"` or `"pipe"`, the absolute path to the file representing it should be used. If there is no such file (e.g., anonymous pipe), the name should explicitly be set to the empty string to distinguish it from the case where the name is just unknown or not covered by the instrumentation.
 
 **sock.transport**: The name of the transport layer protocol (or the relevant protocol below the "application protocol"). Should be one of these strings:
 
@@ -220,3 +251,4 @@ These attributes may be used for any network related operation.
 * `Unix`: Unix Domain socket.
 * `pipe`: Named or anonymous pipe.
 * `inproc`: Signals that there is only in-process communication not using a "real" network protocol in cases where network attributes would normally be expected. Usually all other network attributes can be left out in that case.
+* `other`: Something else (not IP-based).
