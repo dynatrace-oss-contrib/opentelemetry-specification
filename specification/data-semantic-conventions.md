@@ -19,7 +19,7 @@ correlated and cross-analyzed.
 This span types represents HTTP requests. They can be used for http and https
 schemes and various HTTP versions like 1.1, 2 and SPDY.
 
-Given an [RFC 3986](https://www.ietf.org/rfc/rfc3986.txt) compliant URI of the form
+Given an [RFC 3986](https://tools.ietf.org/html/rfc3986) compliant URI of the form
 `scheme:[//authority]path[?query][#fragment]`, the span name of the span SHOULD
 be set to to the URI path value.
 
@@ -32,9 +32,12 @@ be used for the span name instead.
 | `component`    | Denotes the type of the span and needs to be `"http"`. | Yes |
 | `http.method` | HTTP request method. E.g. `"GET"`. | Yes |
 | `http.url` | Full HTTP request URL in the form `scheme://host:port/path?query#fragment`. Usually the fragment is not transmitted over HTTP, but if it is known, it should be included nevertheless. | Defined later. |
-| `http.status_code` | [HTTP response status code](https://tools.ietf.org/html/rfc7231). E.g. `200` (integer) | No |
-| `http.status_text` | [HTTP reason phrase](https://www.ietf.org/rfc/rfc2616.txt). E.g. `"OK"` | No |
+| `http.status_code` | [HTTP response status code][]. E.g. `200` (integer) | No |
+| `http.status_text` | [HTTP reason phrase][]. E.g. `"OK"` | No |
 | `http.flavor` | Kind of HTTP protocol used: `"1.0"`, `"1.1"`, `"2"`, `"SPDY"` or `"QUIC"`. |  If not TCP-based (`QUIC`). |
+
+[HTTP response status code]: https://tools.ietf.org/html/rfc7231#section-6
+[HTTP reason phrase]: https://tools.ietf.org/html/rfc7230#section-3.1.2
 
 It is recommended to also use the general [network attributes][], especially `peer.ip`. If `sock.transport` is not specified, it can be assumed to be `IP.TCP` except if `http.flavor` is `QUIC`, in which case `IP.UDP` is assumed.
 
