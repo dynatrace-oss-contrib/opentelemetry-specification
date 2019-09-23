@@ -168,18 +168,18 @@ Examples of span name: `grpc.test.EchoService/Echo`.
 
 Additionally, the `peer.hostname` and `peer.port` [network attributes][] are required.
 
-## gRPC
+### gRPC
 
 gRPC is a special case of [RPC spans][rpc] but has additional conventions described in this section.
 
-### Status
+#### Status
 
 Implementations MUST set status which MUST be the same as the gRPC client/server
 status. The mapping between gRPC canonical codes and OpenTelemetry status codes
 is 1:1 as OpenTelemetry canonical codes is just a snapshot of grpc codes which
 can be found [here](https://github.com/grpc/grpc-go/blob/master/codes/codes.go).
 
-### Events
+#### Events
 
 In the lifetime of a gRPC stream, an event for each message sent/received on
 client and server spans SHOULD be created with the following attributes:
