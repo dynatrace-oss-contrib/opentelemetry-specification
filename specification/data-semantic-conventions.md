@@ -62,7 +62,7 @@ If the route can not be determined, the `name` attribute MUST be set as defined 
 | Attribute name | Notes and examples                                           | Required? |
 | :------------- | :----------------------------------------------------------- | --------- |
 | `http.target` | The full request target as passed in a [HTTP request line][] or equivalent, e.g. `/path/12314/?q=ddds#123"`. | [1] |
-| `http.host` | The value of the HTTP host header. | [1] |
+| `http.host` | The value of the [HTTP host header][]. Note that this might be empty or not present. | [1] |
 | `http.scheme` | The URI scheme identifying the used protocol: `"http"` or `"https"` | [1] |
 | `http.server_name` | The server name (not including port). This should be obtained via configuration. If no such configuration can be obtained, this attribute MUST NOT be set (`host.name` from the [network attributes][] should be used instead). | [1] |
 | `http.route` | The matched route (path template). E.g. `"/users/:userID?"`. | No |
@@ -71,9 +71,12 @@ If the route can not be determined, the `name` attribute MUST be set as defined 
 | `http.client_ip` | The IP address of the original client behind all proxies, if known (e.g. from [X-Forwarded-For][]). For syntax, see `peer.ip`. | No |
 
 [HTTP request line]: https://tools.ietf.org/html/rfc7230#section-3.1.1
+[HTTP host header]: https://tools.ietf.org/html/rfc7230#section-5.4
 [X-Forwarded-For]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For
 
-**[1]**: `http.url` is usually not readily available on the server side but would have to be assembled in a cumbersome and sometimes lossy process from other information (see e.g. <https://github.com/open-telemetry/opentelemetry-python/pull/148>). It is thus preferred to supply the raw data that *is* available. Namely, one of the following sets is required (in order of preference):
+**[1]**: `http.url` is usually not readily available on the server side but would have to be assembled in a cumbersome and sometimes lossy process from other information (see e.g. <https://github.com/open-telemetry/opentelemetry-python/pull/148>).
+It is thus preferred to supply the raw data that *is* available.
+Namely, one of the following sets is required (in order of preference, all strings must be non-empty):
 
 * `http.scheme`, `http.host`, `http.target`
 * `http.scheme`, `http.server_name`, `host.port`, `http.target`
@@ -98,17 +101,18 @@ Span name: `/webshop/articles/:article_id` (`app_root` + `route`).
 | `http.server_name` | `"example.org"` (in that case, the canonical server name does not match the host) |
 | `host.port`        | `8080`                                                                            |
 | `http.scheme`      | `"https"`                                                                         |
-| `http.route`       | `"/articles/:article_id"` (note that the `app_root` part is missing in this case)   |
+| `http.route`       | `"/articles/:article_id"` (note that the `app_root` part is missing in this case) |
 | `http.status_code` | `200`                                                                             |
 | `http.status_text` | `"OK"`                                                                            |
-| `http.app`         | E.g., `"My cool WebShop"` or `"com.example.webshop"`                                       |
+| `http.app`         | E.g., `"My cool WebShop"` or `"com.example.webshop"`                              |
 | `http.app_root`    | `"/webshop"`                                                                      |
 | `http.client_ip`   | `"192.0.2.4"`                                                                     |
 | `peer.ip`          | `"192.0.2.5"` (the client goes through a proxy)                                   |
 | `code.ns`          | `"com.example.webshop.ArticleService"`                                            |
 | `code.func`        | `"showArticleDetails"`                                                            |
 
-Note that a naive implementation might set `code.ns` = `com.example.mywebframework.HttpDispatcherServlet` and `code.func` = `service`. If possible, this should be avoided and the logically responsible more specific handler method should be used, even if the span is actually started and ended in the web framework (integration).
+Note that a naive implementation might set `code.ns` = `com.example.mywebframework.HttpDispatcherServlet` and `code.func` = `service`.
+If possible, this should be avoided and the logically responsible more specific handler method should be used, even if the span is actually started and ended in the web framework (integration).
 
 ## Databases client calls
 
@@ -130,7 +134,7 @@ attribute names.
 | `db.instance`  | Database instance name. E.g., In Java, if the jdbc.url=`"jdbc:mysql://db.example.com:3306/customers"`, the instance name is `"customers"`. | Yes     |
 | `db.statement` | A database statement for the given database type. Note, that the value may be sanitized to exclude sensitive information. E.g., for `db.type="sql"`, `"SELECT * FROM wuser_table"`; for `db.type="redis"`, `"SET mykey 'WuValue'"`. | Yes       |
 | `db.url` | The connection string used to connect to the database | Yes       |
-| `db.clientlib` | Database driver name or database client library name (when known), e.g., `"JDBI"`, `"jdbc"`, `"odbc"`, `"com.example.postresclient"`. | No       |
+| `db.clientlib` | Database driver name or database client library name (when known), e.g., `"JDBI"`, `"jdbc"`, `"odbc"`, `"com.example.postgreclient"`. | No       |
 | `db.tech` | Database technology, e.g. `"PostgreSQL"`, `"SQLite"`, `"SQL Server"` | No       |
 | `db.resultcount` | An integer specifying the number of results returned. | No       |
 | `db.roundtripcount` | An integer specifying the number of network roundtrips while executing the request. | No       |
@@ -164,7 +168,7 @@ Examples of span name: `grpc.test.EchoService/Echo`.
 | -------------- | ---------------------------------------------------------------------- | --------- |
 | `rpc.service`  | The service name, must be equal to the $service part in the span name. | Yes       |
 | `rpc.method`   | The $method part in the span name.                                     | No        |
-| `rpc.flavor`   | The remoting protocol name if it is widely-used, otherwise the library or framework name. E.g. `"grpc"` | Yes       |
+| `rpc.flavor`   | The remoting protocol name if it is widely-used, otherwise the library or framework name. E.g. `"grpc"` | Yes |
 
 Additionally, the `peer.hostname` and `peer.port` [network attributes][] are required.
 
@@ -237,12 +241,14 @@ These attributes may be used for any network related operation.
 |  Attribute name  |                                 Notes and examples                                 |
 | :--------------- | :--------------------------------------------------------------------------------- |
 | `sock.transport` | Transport protocol used. See note below.                                           |
-| `peer.ip`        | Remote address of the peer (dotted decimal for IPv4 or RFC5952 for IPv6)           |
+| `peer.ip`        | Remote address of the peer (dotted decimal for IPv4 or [RFC5952][] for IPv6)       |
 | `peer.port`      | Remote port number as an integer. E.g., `80`.                                      |
 | `peer.name`      | Remote hostname or similar, see note below.                                        |
 | `host.ip`        | Like `peer.ip` but for the host IP. Useful in case of a multi-IP host.             |
 | `host.port`      | Like `peer.port` but for the host port.                                            |
 | `host.name`      | Like `peer.name` but for the host name. If known, the name that the client used to connect should be preferred. For IP-based communication, an value otbained via an API like POSIX `gethostname` may be used as fallback.  |
+
+[RFC5952]: https://tools.ietf.org/html/rfc5952
 
 **peer.name**, **host.name**: For IP-based communication, the name should be the host name that was used to look up the IP adress in `peer.ip` (e.g., `"example.com"` if connecting to an URL `https://example.com/foo`). If that is not available, reverse-lookup of the IP can be used to obtain it. If `sock.transport` is `"unix"` or `"pipe"`, the absolute path to the file representing it should be used. If there is no such file (e.g., anonymous pipe), the name should explicitly be set to the empty string to distinguish it from the case where the name is just unknown or not covered by the instrumentation.
 
