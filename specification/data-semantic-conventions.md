@@ -288,6 +288,7 @@ The processor of the message should set the kind to `CONSUMER`, unless it always
 | `component`    | Denotes the type of the span and needs to be `"msg"`.                  | Yes       |
 | `msg.flavor`   | A string identifying the messaging system kind used. Should be of the form `KIND.TECH`, e.g. `JMS.Web Sphere` or `AMQP.RabbitMQ`. | Yes |
 | `msg.dst`      | The message destination name. A deprecated alternative key for this attribute is [`message_bus.destination`][ot-msg]. | Yes       |
+| `msg.dst_kind` | The kind of message destination: Either `"queue"` or `"topic"`.        | Yes       |
 | `msg.tmp_dst`  | A boolean that is `true` if the message destination is temporary. | If temporary (assumed to be `false` if missing). |
 | `msg.id`       | An integer or string used by the messaging system as an identifier for the message. | No |
 | `msg.conversation_id` | An integer or string identifying the conversation to which the message belongs. Sometimes called "correlation ID". | No |
