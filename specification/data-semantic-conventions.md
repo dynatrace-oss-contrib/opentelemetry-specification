@@ -14,6 +14,22 @@ This way, the operator will not need to learn specifics of a language and
 telemetry collected from multi-language micro-service can still be easily
 correlated and cross-analyzed.
 
+**Table of contents**
+
+- [HTTP Spans](#http-spans)
+  * [HTTP client](#http-client)
+  * [HTTP server](#http-server)
+- [Databases client calls](#databases-client-calls)
+- [Remote procedure calls](#remote-procedure-calls)
+  * [Attributes](#attributes)
+  * [gRPC](#grpc)
+    + [Status](#status)
+    + [Events](#events)
+- [General attributes](#general-attributes)
+  * [General miscellaneous attributes](#general-miscellaneous-attributes)
+  * [General source code attributes](#general-source-code-attributes)
+  * [General network connection attributes](#general-network-connection-attributes)
+
 ## HTTP Spans
 
 This span types represents HTTP requests. They can be used for http and https
@@ -49,7 +65,7 @@ For a HTTP client span, `SpanKind` MUST be `Client`.
 
 `http.url` is required and represents the HTTP URL used to (initially) make this request.
 
-## HTTP server
+### HTTP server
 
 This span type represents an inbound HTTP request.
 
