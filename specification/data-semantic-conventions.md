@@ -67,7 +67,7 @@ If the route can not be determined, the `name` attribute MUST be set as defined 
 | `http.server_name` | The server name (not including port). This should be obtained via configuration. If no such configuration can be obtained, this attribute MUST NOT be set (`host.name` from the [network attributes][] should be used instead). | [1] |
 | `http.route` | The matched route (path template). E.g. `"/users/:userID?"`. | No |
 | `http.app` | An identifier for the whole HTTP application. E.g. Flask app name, `spring.application.name`, etc. | No |
-| `http.app_root` |The path prefix of the URL that identifies this `http.app`. If multiple roots exist, the one that was matched in the current URL should be used. | No |
+| `http.app_root` |The path prefix of the URL that identifies this `http.app`. Also known as "context root". If multiple roots exist, the one that was matched for this request should be used. | No |
 | `http.client_ip` | The IP address of the original client behind all proxies, if known (e.g. from [X-Forwarded-For][]). For syntax, see `peer.ip`. | No |
 
 [HTTP request line]: https://tools.ietf.org/html/rfc7230#section-3.1.1
