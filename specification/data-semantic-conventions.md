@@ -57,7 +57,7 @@ For a HTTP server span, `SpanKind` MUST be `Server`.
 
 Given an inbound request for a route (e.g. `"/users/:userID?"` the `name` attribute of the span SHOULD be set to this route. If the route does not include the application root path, it SHOULD be prepended to the span name.
 
-If the route can not be determined, the `name` attribute MUST be set as defined in the general semantic conventions for HTTP.
+If the route cannot be determined, the `name` attribute MUST be set as defined in the general semantic conventions for HTTP.
 
 | Attribute name | Notes and examples                                           | Required? |
 | :------------- | :----------------------------------------------------------- | --------- |
@@ -130,17 +130,15 @@ attribute names.
 | Attribute name | Notes and examples                                           | Required? |
 | :------------- | :----------------------------------------------------------- | --------- |
 | `component` | Always the string `"db"` | Yes       |
-| `db.type`      | Database type. For any SQL database, `"sql"`. For others, the lower-case database category, e.g. `"cassandra"`, `"hbase"`, or `"redis"`. | Yes       |
+| `db.tech`      | The lower-case database category, e.g. `"sql"`, `"cassandra"`, `"hbase"`, or `"redis"`, optionally followed by a dot `"."` and the more specific technology name (e.g. `"sql.MySQL"`). | Yes       |
 | `db.instance`  | Database instance name. E.g., In Java, if the jdbc.url=`"jdbc:mysql://db.example.com:3306/customers"`, the instance name is `"customers"`. | Yes     |
 | `db.statement` | A database statement for the given database type. Note, that the value may be sanitized to exclude sensitive information. E.g., for `db.type="sql"`, `"SELECT * FROM wuser_table"`; for `db.type="redis"`, `"SET mykey 'WuValue'"`. | Yes       |
 | `db.url` | The connection string used to connect to the database | Yes       |
-| `db.clientlib` | Database driver name or database client library name (when known), e.g., `"JDBI"`, `"jdbc"`, `"odbc"`, `"com.example.postgreclient"`. | No       |
-| `db.tech` | Database technology, e.g. `"PostgreSQL"`, `"SQLite"`, `"SQL Server"` | No       |
 | `db.resultcount` | An integer specifying the number of results returned. | No       |
 | `db.roundtripcount` | An integer specifying the number of network roundtrips while executing the request. | No       |
 | `db.user`      | Username for accessing database. E.g., `"readonly_user"` or `"reporting_user"` | No        |
 
-Additionally the `peer.name` attribute from the [network attributes][] is required and `peer.ip` and `peer.port` are recommended.
+Additionally the `peer.name` attribute from the [network attributes][] is required and `peer.ip` and `peer.port` are recommended. Also, `tech` ([misc attributes][]) is recommended.
 
 [rpc]: #remote-procedure-calls
 
@@ -217,6 +215,14 @@ client and server spans.
 The attributes described in this section are not specific to a particular operation but rather generic.
 They may be used in any Span they apply to.
 Particular operations may refer to or require some of these attributes.
+
+[misc attributes]: #general-miscellaneous-attributes
+
+### General miscellaneous attributes
+
+| Attribute name | Notes and examples                                           |
+| :------------- | :----------------------------------------------------------- |
+| `tech` | The name of the relevant technology associated with the span, such as a database client tehcnology (e.g., ODBC) or library (e.g., `com.example.sqlite3`) name, a HTTP server framework name (e.g., Java Servlet, JSP, Flask) or similar. This should be the technology used at the side of the span, not at any remote side (e.g. the database client technology if the span represents the client-side of an operation) |
 
 [code attributes]: #general-code-attributes
 
