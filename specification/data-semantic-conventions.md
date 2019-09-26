@@ -16,7 +16,7 @@ correlated and cross-analyzed.
 
 **Table of contents**
 
-- [HTTP Spans](#http-spans)
+- [HTTP](#http)
   * [HTTP client](#http-client)
   * [HTTP server](#http-server)
 - [Databases client calls](#databases-client-calls)
@@ -30,7 +30,7 @@ correlated and cross-analyzed.
   * [General source code attributes](#general-source-code-attributes)
   * [General network connection attributes](#general-network-connection-attributes)
 
-## HTTP Spans
+## HTTP
 
 This span types represents HTTP requests. They can be used for http and https
 schemes and various HTTP versions like 1.1, 2 and SPDY.
@@ -180,15 +180,22 @@ Examples of span name: `grpc.test.EchoService/Echo`.
 
 | Attribute name |                          Notes and examples                            | Required? |
 | -------------- | ---------------------------------------------------------------------- | --------- |
+| `component`    | Denotes the type of the span and needs to be `"rpc"`.                  | Yes       |
 | `rpc.service`  | The service name, must be equal to the $service part in the span name. | Yes       |
 | `rpc.method`   | The $method part in the span name.                                     | No        |
-| `rpc.flavor`   | The remoting protocol name if it is widely-used, otherwise the library or framework name. E.g. `"grpc"` | Yes |
+| `rpc.flavor`   | The remoting protocol name, if it is widely-used. Otherwise the RPC library name must be specified in `tech`. | Yes |
 
 Additionally, the `peer.hostname` and `peer.port` [network attributes][] are required.
+
+Note that `rpc.service` may coincide with `code.ns` and `rpc.method` with `code.func`.
+Semantically however there is the fine distinction that, the `rpc.*` attributes describe the public, RPC protocol level name of the service (method),
+while the `code.*` attributes describe the names used in the source code that implements it.
 
 ### gRPC
 
 gRPC is a special case of [RPC spans][rpc] but has additional conventions described in this section.
+
+`rpc.flavor` must be `"grpc"`.
 
 #### Status
 
@@ -272,8 +279,6 @@ These attributes may be used for any network related operation.
 
 [RFC5952]: https://tools.ietf.org/html/rfc5952
 
-**peer.name**, **host.name**: For IP-based communication, the name should be the host name that was used to look up the IP adress in `peer.ip` (e.g., `"example.com"` if connecting to an URL `https://example.com/foo`). If that is not available, reverse-lookup of the IP can be used to obtain it. If `sock.transport` is `"unix"` or `"pipe"`, the absolute path to the file representing it should be used. If there is no such file (e.g., anonymous pipe), the name should explicitly be set to the empty string to distinguish it from the case where the name is just unknown or not covered by the instrumentation.
-
 **sock.transport**: The name of the transport layer protocol (or the relevant protocol below the "application protocol"). Should be one of these strings:
 
 * `IP.TCP`
@@ -283,3 +288,5 @@ These attributes may be used for any network related operation.
 * `pipe`: Named or anonymous pipe.
 * `inproc`: Signals that there is only in-process communication not using a "real" network protocol in cases where network attributes would normally be expected. Usually all other network attributes can be left out in that case.
 * `other`: Something else (not IP-based).
+
+**peer.name**, **host.name**: For IP-based communication, the name should be the host name that was used to look up the IP adress in `peer.ip` (e.g., `"example.com"` if connecting to an URL `https://example.com/foo`). If that is not available, reverse-lookup of the IP can be used to obtain it. If `sock.transport` is `"unix"` or `"pipe"`, the absolute path to the file representing it should be used. If there is no such file (e.g., anonymous pipe), the name should explicitly be set to the empty string to distinguish it from the case where the name is just unknown or not covered by the instrumentation.
