@@ -63,7 +63,7 @@ It is recommended to also use the general [network attributes][], especially `pe
 
 This span type represents an outbound HTTP request.
 
-For a HTTP client span, `SpanKind` MUST be `Client`.
+For an HTTP client span, `SpanKind` MUST be `Client`.
 
 `http.url` is required and represents the HTTP URL used to (initially) make this request.
 
@@ -71,7 +71,7 @@ For a HTTP client span, `SpanKind` MUST be `Client`.
 
 This span type represents an inbound HTTP request.
 
-For a HTTP server span, `SpanKind` MUST be `Server`.
+For an HTTP server span, `SpanKind` MUST be `Server`.
 
 Given an inbound request for a route (e.g. `"/users/:userID?"` the `name` attribute of the span SHOULD be set to this route. If the route does not include the application root path, it SHOULD be prepended to the span name.
 
@@ -318,7 +318,7 @@ Particular operations may refer to or require some of these attributes.
 
 | Attribute name | Notes and examples                                           |
 | :------------- | :----------------------------------------------------------- |
-| `tech` | The name of the relevant technology associated with the span, such as a database client tehcnology (e.g., ODBC) or library (e.g., `com.example.sqlite3`) name, a HTTP server framework name (e.g., Java Servlet, JSP, Flask) or similar. This should be the technology used at the side of the span, not at any remote side (e.g. the database client technology if the span represents the client-side of an operation) |
+| `tech` | The name of the relevant technology associated with the span, such as a database client tehcnology (e.g., ODBC) or library (e.g., `com.example.sqlite3`) name, an HTTP server framework name (e.g., Java Servlet, JSP, Flask) or similar. This should be the technology used at the side of the span, not at any remote side (e.g. the database client technology if the span represents the client-side of an operation) |
 
 [code attributes]: #general-code-attributes
 
