@@ -88,7 +88,9 @@ The [HTTP host header][] (in combination with a port number) is normally used to
 The host header value that matches some virtual host is called the virtual hosts's **server name**. If there are multiple aliases for the virtual host, one of them (often the first one listed in the configuration) is called the **primary server name**. See for example, the Apache [`ServerName`][ap-sn] or NGINX [`server_name`][nx-sn] directive or the CGI specification on `SERVER_NAME` ([RFC 3875][rfc-servername]).
 In practice the HTTP host header is often ignored when just a single virtual host is configured for the IP.
 
-Within a single virtual host, some servers support the concepts of an **HTTP application** that can be "mounted" under some **application root** (also know as *[context root][]* *[context prefix][]*, or *[document base][]*) which is a fixed path prefix of the URL that determines to which application a request is routed
+Within a single virtual host, some servers support the concepts of an **HTTP application** that can be "mounted" under some **application root**
+(also know as *[context root][]*,*[context prefix][]*, or *[document base][]*)
+which is a fixed path prefix of the URL that determines to which application a request is routed
 (e.g., the server could be configured to route all requests that go to an URL path starting with `/webshop/` at a particular virtual host
 to the `com.example.webshop` web application).
 
