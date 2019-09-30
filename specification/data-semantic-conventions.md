@@ -52,7 +52,7 @@ of the request and has a lower cardinality can be identified.
 | `http.url` | Full HTTP request URL in the form `scheme://host[:port]/path?query[#fragment]`. Usually the fragment is not transmitted over HTTP, but if it is known, it should be included nevertheless. | Defined later. |
 | `http.status_code` | [HTTP response status code][]. E.g. `200` (integer) | No |
 | `http.status_text` | [HTTP reason phrase][]. E.g. `"OK"` | No |
-| `http.flavor` | Kind of HTTP protocol used: `"1.0"`, `"1.1"`, `"2"`, `"SPDY"` or `"QUIC"`. |  If not TCP-based (`QUIC`). |
+| `http.flavor` | Kind of HTTP protocol used: `"1.0"`, `"1.1"`, `"2"`, `"SPDY"` or `"QUIC"`. |  No |
 
 It is recommended to also use the general [network attributes][], especially `peer.ip`. If `sock.transport` is not specified, it can be assumed to be `IP.TCP` except if `http.flavor` is `QUIC`, in which case `IP.UDP` is assumed.
 
