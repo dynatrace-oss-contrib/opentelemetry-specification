@@ -21,18 +21,18 @@ correlated and cross-analyzed.
   * [HTTP server](#http-server)
     + [Definitions](#definitions)
     + [Semantic conventions](#semantic-conventions)
-- [🚧 Databases client calls](#%F0%9F%9A%A7-databases-client-calls)
+- [Databases client calls](#databases-client-calls)
 - [Remote procedure calls](#remote-procedure-calls)
   * [Attributes](#attributes)
   * [gRPC](#grpc)
     + [Status](#status)
     + [Events](#events)
-- [🚧 Messaging systems](#%F0%9F%9A%A7-messaging-systems)
+- [Messaging systems](#messaging-systems)
   * [Definitions](#definitions-1)
   * [Conventions](#conventions)
   * [Messaging attributes](#messaging-attributes)
 - [General attributes](#general-attributes)
-  * [🚧 General miscellaneous attributes](#%F0%9F%9A%A7-general-miscellaneous-attributes)
+  * [General miscellaneous attributes](#general-miscellaneous-attributes)
   * [General source code attributes](#general-source-code-attributes)
   * [General network connection attributes](#general-network-connection-attributes)
 
@@ -166,7 +166,9 @@ Span name: `/webshop/articles/:article_id` (`app_root` + `route`).
 Note that a naive implementation might set `code.ns` = `com.example.mywebframework.HttpDispatcherServlet` and `code.func` = `service`.
 If possible, this should be avoided and the logically responsible more specific handler method should be used, even if the span is actually started and ended in the web framework (integration).
 
-## 🚧 Databases client calls
+## Databases client calls
+
+> 🚧 WORK IN PROGRESS
 
 For database client call the `SpanKind` MUST be `Client`.
 
@@ -270,7 +272,9 @@ the values will be consistent between different implementations. In case of
 unary calls only one sent and one received message will be recorded for both
 client and server spans.
 
-## 🚧 Messaging systems
+## Messaging systems
+
+> 🚧 WORK IN PROGRESS
 
 ### Definitions
 
@@ -349,7 +353,9 @@ Particular operations may refer to or require some of these attributes.
 
 [misc attributes]: #general-miscellaneous-attributes
 
-### 🚧 General miscellaneous attributes
+### General miscellaneous attributes
+
+> 🚧 WORK IN PROGRESS
 
 | Attribute name | Notes and examples                                           |
 | :------------- | :----------------------------------------------------------- |
