@@ -19,18 +19,20 @@ correlated and cross-analyzed.
 - [HTTP](#http)
   * [HTTP client](#http-client)
   * [HTTP server](#http-server)
-- [Databases client calls](#databases-client-calls)
+    + [Definitions](#definitions)
+    + [Semantic conventions](#semantic-conventions)
+- [🚧 Databases client calls](#%F0%9F%9A%A7-databases-client-calls)
 - [Remote procedure calls](#remote-procedure-calls)
   * [Attributes](#attributes)
   * [gRPC](#grpc)
     + [Status](#status)
     + [Events](#events)
-- [Messaging systems](#messaging-systems)
-  * [Definitions](#definitions)
+- [🚧 Messaging systems](#%F0%9F%9A%A7-messaging-systems)
+  * [Definitions](#definitions-1)
   * [Conventions](#conventions)
   * [Messaging attributes](#messaging-attributes)
 - [General attributes](#general-attributes)
-  * [General miscellaneous attributes](#general-miscellaneous-attributes)
+  * [🚧 General miscellaneous attributes](#%F0%9F%9A%A7-general-miscellaneous-attributes)
   * [General source code attributes](#general-source-code-attributes)
   * [General network connection attributes](#general-network-connection-attributes)
 
@@ -54,7 +56,7 @@ of the request and has a lower cardinality can be identified.
 | `http.status_text` | [HTTP reason phrase][]. E.g. `"OK"` | No |
 | `http.flavor` | Kind of HTTP protocol used: `"1.0"`, `"1.1"`, `"2"`, `"SPDY"` or `"QUIC"`. |  No |
 
-It is recommended to also use the general [network attributes][], especially `peer.ip`. If `sock.transport` is not specified, it can be assumed to be `IP.TCP` except if `http.flavor` is `QUIC`, in which case `IP.UDP` is assumed.
+It is recommended to also use the general [network attributes][], especially `net.peer.ip`. If `net.transport` is not specified, it can be assumed to be `IP.TCP` except if `http.flavor` is `QUIC`, in which case `IP.UDP` is assumed.
 
 
 [HTTP response status code]: https://tools.ietf.org/html/rfc7231#section-6
@@ -113,11 +115,11 @@ If the route cannot be determined, the `name` attribute MUST be set as defined i
 | `http.target` | The full request target as passed in a [HTTP request line][] or equivalent, e.g. `/path/12314/?q=ddds#123"`. | [1] |
 | `http.host` | The value of the [HTTP host header][]. Note that this might be empty or not present. | [1] |
 | `http.scheme` | The URI scheme identifying the used protocol: `"http"` or `"https"` | [1] |
-| `http.server_name` | The primary server name of the matched virtual host. This should be obtained via configuration. If no such configuration can be obtained, this attribute MUST NOT be set ( `host.name` should be used instead). | [1] |
+| `http.server_name` | The primary server name of the matched virtual host. This should be obtained via configuration. If no such configuration can be obtained, this attribute MUST NOT be set ( `net.host.name` should be used instead). | [1] |
 | `http.route` | The matched route (path template). E.g. `"/users/:userID?"`. | No |
 | `http.app` | An identifier for the whole HTTP application. E.g. Flask app name, `spring.application.name`, etc. | No |
 | `http.app_root` |The path prefix of the URL that identifies this `http.app`. If multiple roots exist, the one that was matched for this request should be used. | No |
-| `http.client_ip` | The IP address of the original client behind all proxies, if known (e.g. from [X-Forwarded-For][]). Note that this is not necessarily the same as `peer.ip*`, which would identify the nework-level peer, which may be a proxy. | No |
+| `http.client_ip` | The IP address of the original client behind all proxies, if known (e.g. from [X-Forwarded-For][]). Note that this is not necessarily the same as `net.peer.ip`, which would identify the nework-level peer, which may be a proxy. | No |
 
 [HTTP request line]: https://tools.ietf.org/html/rfc7230#section-3.1.1
 [HTTP host header]: https://tools.ietf.org/html/rfc7230#section-5.4
@@ -128,8 +130,8 @@ It is thus preferred to supply the raw data that *is* available.
 Namely, one of the following sets is required (in order of usual preference unless for a particular web server/framework it is known that some other set is preferable for some reason; all strings must be non-empty):
 
 * `http.scheme`, `http.host`, `http.target`
-* `http.scheme`, `http.server_name`, `host.port`, `http.target`
-* `http.scheme`, `host.name`, `host.port`, `http.target`
+* `http.scheme`, `http.server_name`, `net.host.port`, `http.target`
+* `http.scheme`, `net.host.name`, `net.host.port`, `http.target`
 * `http.url`
 
 Of course, more than the required attributes can be supplied, but this is recommended only if they cannot be inferred from the sent ones.
@@ -149,7 +151,7 @@ Span name: `/webshop/articles/:article_id` (`app_root` + `route`).
 | `http.target`      | `"/webshop/articles/4?s=1"`                                                       |
 | `http.host`        | `"example.com:8080"`                                                              |
 | `http.server_name` | `"example.com"`                                                                   |
-| `host.port`        | `8080`                                                                            |
+| `net.host.port`    | `8080`                                                                            |
 | `http.scheme`      | `"https"`                                                                         |
 | `http.route`       | `"/articles/:article_id"` (note that the `app_root` part is missing in this case) |
 | `http.status_code` | `200`                                                                             |
@@ -157,14 +159,14 @@ Span name: `/webshop/articles/:article_id` (`app_root` + `route`).
 | `http.app`         | E.g., `"My cool WebShop"` or `"com.example.webshop"`                              |
 | `http.app_root`    | `"/webshop"`                                                                      |
 | `http.client_ip`   | `"192.0.2.4"`                                                                     |
-| `peer.ip`          | `"192.0.2.5"` (the client goes through a proxy)                                   |
+| `net.peer.ip`      | `"192.0.2.5"` (the client goes through a proxy)                                   |
 | `code.ns`          | `"com.example.webshop.ArticleService"`                                            |
 | `code.func`        | `"showArticleDetails"`                                                            |
 
 Note that a naive implementation might set `code.ns` = `com.example.mywebframework.HttpDispatcherServlet` and `code.func` = `service`.
 If possible, this should be avoided and the logically responsible more specific handler method should be used, even if the span is actually started and ended in the web framework (integration).
 
-## Databases client calls
+## 🚧 Databases client calls
 
 For database client call the `SpanKind` MUST be `Client`.
 
@@ -188,7 +190,7 @@ attribute names.
 | `db.roundtripcount` | An integer specifying the number of network roundtrips while executing the request. | No       |
 | `db.user`      | Username for accessing database. E.g., `"readonly_user"` or `"reporting_user"` | No        |
 
-Additionally the `peer.name` attribute from the [network attributes][] is required and `peer.ip` and `peer.port` are recommended. Also, `tech` ([misc attributes][]) is recommended.
+Additionally the `net.peer.name` attribute from the [network attributes][] is required and `net.peer.ip` and `net.peer.port` are recommended. Also, `tech` ([misc attributes][]) is recommended.
 
 [rpc]: #remote-procedure-calls
 
@@ -196,11 +198,11 @@ Additionally the `peer.name` attribute from the [network attributes][] is requir
 
 Also known as Remote Method Invocation (RMI).
 
-Implementations MUST create a span, when the RPC call starts, one for
-client-side and one for server-side. Outgoing requests should be a span `kind`
+Implementations MUST create a span, when the RPC call starts, one on the
+client-side and one on the server-side. Outgoing requests should be a span `kind`
 of `CLIENT` and incoming requests should be a span `kind` of `SERVER`.
 
-Span `name` MUST be full RPC method name formatted as:
+Span `name` MUST be the full RPC method name formatted as:
 
 ```
 $package.$service/$method
@@ -217,12 +219,13 @@ Examples of span name: `grpc.test.EchoService/Echo`.
 | `component`    | Denotes the type of the span and needs to be `"rpc"`.                  | Yes       |
 | `rpc.service`  | The service name, must be equal to the $service part in the span name. | Yes       |
 | `rpc.method`   | The $method part in the span name.                                     | No        |
-| `rpc.flavor`   | The remoting protocol name, if it is widely-used. Otherwise the RPC library name must be specified in `tech`. | Yes |
+| `rpc.flavor`   | The name of the used remoting system, e.g. `"grpc"` or `"RMI"`.        | No        |
 
-Additionally, the `peer.hostname` and `peer.port` [network attributes][] are required.
+Additionally, the `net.peer.name` and `net.peer.port` [network attributes][] are required.
 
 Note that `rpc.service` may coincide with `code.ns` and `rpc.method` with `code.func`.
-Semantically however there is the fine distinction that, the `rpc.*` attributes describe the public, RPC protocol level name of the service (method),
+Semantically however there is the fine distinction that the `rpc.*` attributes describe the public,
+RPC protocol level name of the service (method),
 while the `code.*` attributes describe the names used in the source code that implements it.
 
 ### gRPC
@@ -267,7 +270,7 @@ the values will be consistent between different implementations. In case of
 unary calls only one sent and one received message will be recorded for both
 client and server spans.
 
-## Messaging systems
+## 🚧 Messaging systems
 
 ### Definitions
 
@@ -323,7 +326,7 @@ The processor of the message should set the kind to `CONSUMER`, unless it always
 | `msg.id`       | An integer or string used by the messaging system as an identifier for the message. | No |
 | `msg.conversation_id` | An integer or string identifying the conversation to which the message belongs. Sometimes called "correlation ID". | No |
 
-It is strongly recommended to also set at least the [network attributes] `peer.ip`, `peer.name` and `peer.port`.
+It is strongly recommended to also set at least the [network attributes] `net.peer.ip`, `net.peer.name` and `net.peer.port`.
 
 [ot-msg]: https://github.com/opentracing/specification/blob/master/semantic_conventions.md#message-bus
 
@@ -346,7 +349,7 @@ Particular operations may refer to or require some of these attributes.
 
 [misc attributes]: #general-miscellaneous-attributes
 
-### General miscellaneous attributes
+### 🚧 General miscellaneous attributes
 
 | Attribute name | Notes and examples                                           |
 | :------------- | :----------------------------------------------------------- |
@@ -356,7 +359,7 @@ Particular operations may refer to or require some of these attributes.
 
 ### General source code attributes
 
-Often a Span is tied closely to a certain unit of code, for example the function that handles an HTTP request. In that case, it makes sense to add the name of the function that is logically responsible for handling the operation that traces the span (usually the method that starts the span) to the span attributes as follows:
+Often a Span is tied closely to a certain unit of code, for example the function that handles an HTTP request. In that case, it might make sense to add the name of the function that is logically responsible for handling the operation that the span describes (usually the method that starts the span) to the span attributes as follows:
 
 | Attribute name | Notes and examples                                           |
 | :------------- | :----------------------------------------------------------- |
@@ -372,19 +375,19 @@ Often a Span is tied closely to a certain unit of code, for example the function
 
 These attributes may be used for any network related operation.
 
-|  Attribute name  |                                 Notes and examples                                 |
-| :--------------- | :--------------------------------------------------------------------------------- |
-| `sock.transport` | Transport protocol used. See note below.                                           |
-| `peer.ip`        | Remote address of the peer (dotted decimal for IPv4 or [RFC5952][] for IPv6)       |
-| `peer.port`      | Remote port number as an integer. E.g., `80`.                                      |
-| `peer.name`      | Remote hostname or similar, see note below.                                        |
-| `host.ip`        | Like `peer.ip` but for the host IP. Useful in case of a multi-IP host.             |
-| `host.port`      | Like `peer.port` but for the host port.                                            |
-| `host.name`      | Like `peer.name` but for the host name. If known, the name that the client used to connect should be preferred. For IP-based communication, an value otbained via an API like POSIX `gethostname` may be used as fallback.  |
+|  Attribute name  |                                 Notes and examples                                |
+| :--------------- | :-------------------------------------------------------------------------------- |
+| `net.transport` | Transport protocol used. See note below.                                           |
+| `net.peer.ip`   | Remote address of the peer (dotted decimal for IPv4 or [RFC5952][] for IPv6)       |
+| `net.peer.port` | Remote port number as an integer. E.g., `80`.                                      |
+| `net.peer.name` | Remote hostname or similar, see note below.                                        |
+| `net.host.ip`   | Like `net.peer.ip` but for the host IP. Useful in case of a multi-IP host.         |
+| `net.host.port` | Like `net.peer.port` but for the host port.                                        |
+| `net.host.name` | Like `net.peer.name` but for the host name. If known, the name that the peer used to connect should be preferred. For IP-based communication, an value otbained via an API like POSIX `gethostname` may be used as fallback. |
 
 [RFC5952]: https://tools.ietf.org/html/rfc5952
 
-**sock.transport**: The name of the transport layer protocol (or the relevant protocol below the "application protocol"). Should be one of these strings:
+**net.transport**: The name of the transport layer protocol (or the relevant protocol below the "application protocol"). Should be one of these strings:
 
 * `IP.TCP`
 * `IP.UDP`
@@ -394,4 +397,10 @@ These attributes may be used for any network related operation.
 * `inproc`: Signals that there is only in-process communication not using a "real" network protocol in cases where network attributes would normally be expected. Usually all other network attributes can be left out in that case.
 * `other`: Something else (not IP-based).
 
-**peer.name**, **host.name**: For IP-based communication, the name should be the host name that was used to look up the IP adress in `peer.ip` (e.g., `"example.com"` if connecting to an URL `https://example.com/foo`). If that is not available, reverse-lookup of the IP can be used to obtain it. If `sock.transport` is `"unix"` or `"pipe"`, the absolute path to the file representing it should be used. If there is no such file (e.g., anonymous pipe), the name should explicitly be set to the empty string to distinguish it from the case where the name is just unknown or not covered by the instrumentation.
+**net.peer.name**, **net.host.name**:
+For IP-based communication, the name should be the host name that was used to look up the IP adress in `peer.ip`
+(e.g., `"example.com"` if connecting to an URL `https://example.com/foo`).
+If that is not available, reverse-lookup of the IP can be used to obtain it.
+If `net.transport` is `"unix"` or `"pipe"`, the absolute path to the file representing it should be used.
+If there is no such file (e.g., anonymous pipe),
+the name should explicitly be set to the empty string to distinguish it from the case where the name is just unknown or not covered by the instrumentation.
