@@ -89,7 +89,7 @@ The host header value that matches some virtual host is called the virtual hosts
 In practice the HTTP host header is often ignored when just a single virtual host is configured for the IP.
 
 Within a single virtual host, some servers support the concepts of an **HTTP application** that can be "mounted" under some **application root**
-(also know as *[context root][]*,*[context prefix][]*, or *[document base][]*)
+(also know as *[context root][]*, *[context prefix][]*, or *[document base][]*)
 which is a fixed path prefix of the URL that determines to which application a request is routed
 (e.g., the server could be configured to route all requests that go to an URL path starting with `/webshop/` at a particular virtual host
 to the `com.example.webshop` web application).
