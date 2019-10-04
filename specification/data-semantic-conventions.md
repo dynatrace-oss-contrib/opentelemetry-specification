@@ -17,6 +17,9 @@ correlated and cross-analyzed.
 **Table of contents**
 
 - [HTTP](#http)
+  * [Name](#name)
+  * [Status](#status)
+  * [Common Attributes](#common-attributes)
   * [HTTP client](#http-client)
   * [HTTP server](#http-server)
     + [Definitions](#definitions)
@@ -25,7 +28,7 @@ correlated and cross-analyzed.
 - [Remote procedure calls](#remote-procedure-calls)
   * [Attributes](#attributes)
   * [gRPC](#grpc)
-    + [Status](#status)
+    + [Status](#status-1)
     + [Events](#events)
 - [Messaging systems](#messaging-systems)
   * [Definitions](#definitions-1)
@@ -35,7 +38,6 @@ correlated and cross-analyzed.
   * [General miscellaneous attributes](#general-miscellaneous-attributes)
   * [General source code attributes](#general-source-code-attributes)
   * [General network connection attributes](#general-network-connection-attributes)
-
 ## HTTP
 
 This section defines semantic conventions for HTTP client and server Spans.
