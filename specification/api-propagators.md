@@ -24,6 +24,8 @@ Propagators API consists of two main formats:
 - `HTTPTextFormat` is used to inject and extract a value as text into carriers that travel
 in-band across process boundaries.
 
+Deserializing must set `IsRemote` to true on the returned `SpanContext`.
+
 ## Binary Format
 
 `BinaryFormat` is a formatter to serialize and deserialize a value into a binary format.
@@ -111,7 +113,7 @@ Required arguments:
 Extracts the value from upstream. For example, as http headers.
 
 If the value could not be parsed, the underlying implementation will decide to return an
-object representing either an empty value, an invalid value, or a valid value. Implementation
+object representing either an empty value, an invalid value, or a valid value. Implementations
 MUST not return null.
 
 Required arguments:
