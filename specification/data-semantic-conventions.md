@@ -289,7 +289,7 @@ Span `name` should be set to low cardinality value representing the statement
 executed on the database. It may be stored procedure name (without argument), SQL
 statement without variable arguments, etc. When it's impossible to get any
 meaningful representation of the span `name`, it can be populated using the same
-value as `db.instance`.
+value as `db.name`.
 
 ### Connection-level attributes
 
@@ -318,7 +318,7 @@ although usually only one `db.name` will be used per connection.
 
 | Attribute name | Notes and examples                                           | Required? |
 | :------------- | :----------------------------------------------------------- | --------- |
-| `db.name`  | Database name. E.g., In Java, if the jdbc.url=`"jdbc:mysql://db.example.com:3306/customers"`, the name is `"customers"`. Note that this attribute was previously called `db.instance` but has nothing to do with [MS SQL Server instances][]. For commands that switch the database, this should be set to the target database (even if the command fails). | Yes (if applicable) |
+| `db.name`  | Database name. E.g., In Java, if the jdbc.url=`"jdbc:mysql://db.example.com:3306/customers"`, the name is `"customers"`. For commands that switch the database, this should be set to the target database (even if the command fails). | Yes (if applicable) |
 | `db.statement` | A database statement for the given database type. Note that the value may be sanitized to exclude sensitive information. E.g., for `db.type="sql"`, `"SELECT * FROM wuser_table"`; for `db.type="redis"`, `"SET mykey 'WuValue'"`. | Yes (if applicable)       |
 | `db.op` | The type of operation that is executed, e.g. the [MongoDB command name][] such as `findAndModify`. While it would semantically make sense to set this e.g. to an SQL keyword like `SELECT` or `INSERT`, it is *not* recommended to attempt any client-side parsing of `db.statement` just to get this property (the back end can do that if required). | If `db.statement` is not applicable.       |
 
