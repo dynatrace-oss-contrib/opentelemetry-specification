@@ -22,9 +22,7 @@ value as `db.name`.
 
 ## Connection-level attributes
 
-These attributes will usually be the same for all operations performed over the same database connection
-although some database systems may allow to switch to a different `db.user` within the same connection
-and other database systems may not even have the concept of a connection.
+These attributes will usually be the same for all operations performed over the same database connection. Some database systems may allow a connection to switch to a different `db.user`, and other database systems may not even have the concept of a connection though.
 
 | Attribute name | Notes and examples                                           | Required? |
 | :------------- | :----------------------------------------------------------- | --------- |
@@ -44,8 +42,7 @@ If using a non-standard port for the `db.tech`, at least one of `net.peer.port` 
 
 ## Call-level attributes
 
-These attributes may be different for each operation performed, even if it uses the same connection
-although usually only one `db.name` will be used per connection.
+These attributes may be different for each operation performed even if the same connection is used for multiple operations. Usually only one `db.name` will be used per connection though.
 
 | Attribute name | Notes and examples                                           | Required? |
 | :------------- | :----------------------------------------------------------- | --------- |
