@@ -68,5 +68,3 @@ In **HBase**, `db.name` is the [namespace][hbase ns].
 [hbase ns]: https://hbase.apache.org/book.html#_namespace
 
 **Redis** does not have a database name.
-
-[rpc]: #remote-procedure-calls
