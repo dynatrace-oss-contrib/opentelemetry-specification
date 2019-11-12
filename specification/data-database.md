@@ -38,7 +38,7 @@ These attributes will usually be the same for all operations performed over the 
 Additionally at least one of `net.peer.name` or `net.peer.ip` from the [network attributes][] is required and `net.peer.port` is recommended.
 If using a non-standard port for the `db.tech`, at least one of `net.peer.port` or `db.portname` is required.
 
-[network attributes]: data-span-general.md#general-network-attributes
+[network attributes]: data-span-general.md#general-network-connection-attributes
 
 ## Call-level attributes
 

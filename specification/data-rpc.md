@@ -42,7 +42,7 @@ Examples of span name: `grpc.test.EchoService/Echo`.
 
 Additionally, the `net.peer.name` and `net.peer.port` [network attributes][] are required.
 
-[network attributes]: data-span-general.md#general-network-attributes
+[network attributes]: data-span-general.md#general-network-connection-attributes
 
 Note that `rpc.service` may coincide with `code.ns` and `rpc.method` with `code.func`.
 Semantically however there is the fine distinction that the `rpc.*` attributes describe the public,

@@ -66,8 +66,7 @@ The processor of the message should set the kind to `CONSUMER`, unless it always
 
 It is strongly recommended to also set at least the [network attributes][] `net.peer.ip`, `net.peer.name` and `net.peer.port`.
 
-[network attributes]: data-span-general.md#general-network-attributes
-
+[network attributes]: data-span-general.md#general-network-connection-attributes
 [ot-msg]: https://github.com/opentracing/specification/blob/master/semantic_conventions.md#message-bus
 
 For message consumers, the following additional attributes may be set:

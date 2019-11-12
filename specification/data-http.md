@@ -73,7 +73,7 @@ Note that the items marked with [1] are different from the mapping defined in th
 
 It is recommended to also use the general [network attributes][], especially `net.peer.ip`. If `net.transport` is not specified, it can be assumed to be `IP.TCP` except if `http.flavor` is `QUIC`, in which case `IP.UDP` is assumed.
 
-[network attributes]: data-span-general.md#general-network-attributes
+[network attributes]: data-span-general.md#general-network-connection-attributes
 [HTTP response status code]: https://tools.ietf.org/html/rfc7231#section-6
 [HTTP reason phrase]: https://tools.ietf.org/html/rfc7230#section-3.1.2
 
