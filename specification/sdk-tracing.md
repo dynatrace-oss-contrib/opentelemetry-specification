@@ -260,6 +260,40 @@ high contention in a very high traffic service.
 * `maxExportBatchSize` - the maximum batch size of every export. It must be
   smaller or equal to `maxQueueSize`. The default value is `512`.
 
+##### Span watcher processor
+
+This implementation passes spans that have been started but not yet ended
+to the configured exporter.
+On each interval defined by `reportIntervalMillis`, all unfinished spans that
+have been started more than `reportIntervalMillis` ago, are exported as is.
+
+**Configurable parameters:**
+
+* `exporter` - the exporter where the spans are pushed.
+* `maxQueueSize` - the maximum queue size. After the size is reached spans are
+  dropped. The default value is `2048`.
+* `reportIntervalMillis` - the delay interval in milliseconds between two
+  consecutive exports. The default value is `5000`.
+* `exporterTimeoutMillis` - how long the export can run before it is cancelled.
+  The default value is `30000`.
+* `maxExportBatchSize` - the maximum batch size of every export. It must be
+  smaller or equal to `maxQueueSize`. The default value is `512`.
+
+For languages that support the concept of weak references it is recommended to
+only use these for keeping references to unfinished spans in the processor.
+Otherwise, it would accumulate references to spans abandoned by the user without
+ending them and therefore potentially leak memory.
+If weak references are not supported, a timeout parameter should be added for
+this processor, after which unfinished spans are dropped without reporting
+further updates. This timeout, however, should only apply to this processor and
+MUST NOT affect spans that are ended properly after the timeout. Other
+processors, including the simple and batching processor, will still export
+these spans once finished.
+
+* `spanDurationTimeoutMillis` - no further updates are sent for spans that have
+  been started longer in the past than the specified timeout.
+  The default is `???`.
+
 ### Span Exporter
 
 `Span Exporter` defines the interface that protocol-specific exporters must
