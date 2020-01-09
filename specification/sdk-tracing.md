@@ -279,8 +279,9 @@ have been started more than `reportIntervalMillis` ago, are exported as is.
 * `maxExportBatchSize` - the maximum batch size of every export. It must be
   smaller or equal to `maxQueueSize`. The default value is `512`.
 * `spanDurationTimeoutMillis` - On each report interval, spans older than
-  `spanDurationTimeoutMillis` which have not yet ended will be dropped.
-  The default is `???`.
+  `spanDurationTimeoutMillis` which have not yet ended will be dropped from
+  the watch list.
+  The default is `60000`.
   (_only applies to languages where weak references are not supported or
   suitable_)
 
@@ -288,12 +289,13 @@ For languages that support the concept of weak references it is recommended to
 only use these for keeping references to un-ended spans in the processor.
 Otherwise, it would accumulate references to spans abandoned by the user without
 ending them and therefore potentially leak memory.
-If weak references are not supported or suitable for this application, a timeout
-parameter should be added for this processor, after which un-ended spans are
-dropped without reporting further updates. This timeout, however, should only
-apply to this processor and MUST NOT affect spans that are ended properly after
-the timeout. Other processors, including the simple and batching processor, will
-still export these spans as they normally would.
+If weak references are not supported or suitable for this application, the timeout
+parameter `spanDurationTimeoutMillis` should be added for this processor. Un-ended
+spans older than this timeout are dropped from the list of watched spans and
+therefore updates will not be reported any longer for them.
+This timeout, however, should only apply to this processor and MUST NOT affect spans
+that are ended properly after the timeout. Other processors, including the simple and
+batching processor, will still export these spans as they normally would.
 
 
 ### Span Exporter
