@@ -277,7 +277,10 @@ have been started more than `reportIntervalMillis` ago, are exported as is.
 * `exporterTimeoutMillis` - how long the export can run before it is cancelled.
   The default value is `30000`.
 * `maxExportBatchSize` - the maximum batch size of every export. It must be
-  smaller or equal to `maxQueueSize`. The default value is `512`.
+  smaller or equal to `maxWatchedSpans`. The default value is `512`.
+* `exportEndedSpans` (boolean) - if set, spans are also exported once they are
+  ended.
+  The default value is `false`.
 * `spanDurationTimeoutMillis` - On each report interval, spans older than
   `spanDurationTimeoutMillis` which have not yet ended will be dropped from
   the watch list.
