@@ -288,6 +288,11 @@ have been started more than `reportIntervalMillis` ago, are exported as is.
   (_only applies to languages where weak references are not supported or
   suitable_)
 
+In order to avoid multiple exports potentially being blocked on connection issues or
+when `reportIntervalMillis` is set inappropriately, exports should *not* be performed
+in parallel. If a previous export is still in progress on the next
+`reportIntervalMillis`, the current export should be skipped.
+
 For languages that support the concept of weak references it is recommended to
 only use these for keeping references to un-ended spans in the processor.
 Otherwise, it would accumulate references to spans abandoned by the user without
