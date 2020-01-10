@@ -263,14 +263,14 @@ high contention in a very high traffic service.
 ##### Span watcher processor
 
 This implementation passes spans that have been started but not yet ended
-to the configured exporter.
-On each interval defined by `reportIntervalMillis`, all un-ended spans that
+to the configured exporter. These spans are called _unfinished_ spans.
+On each interval defined by `reportIntervalMillis`, all unfinished spans that
 have been started more than `reportIntervalMillis` ago, are exported as is.
 
 **Configurable parameters:**
 
 * `exporter` - the exporter where the spans are pushed.
-* `maxWatchedSpans` - the maximum number of un-ended spans to be watched.
+* `maxWatchedSpans` - the maximum number of unfinished spans to be watched.
   While reached, no new spans will be accepted. The default value is `2048`.
 * `reportIntervalMillis` - the delay interval in milliseconds between two
   consecutive exports. The default value is `5000`.
@@ -294,11 +294,11 @@ in parallel. If a previous export is still in progress on the next
 `reportIntervalMillis`, the current export should be skipped.
 
 For languages that support the concept of weak references it is recommended to
-only use these for keeping references to un-ended spans in the processor.
+only use these for keeping references to unfinished spans in the processor.
 Otherwise, it would accumulate references to spans abandoned by the user without
 ending them and therefore potentially leak memory.
 If weak references are not supported or suitable to be used, the timeout parameter
-`spanDurationTimeoutMillis` should be added for this processor. Un-ended spans which
+`spanDurationTimeoutMillis` should be added for this processor. Unfinished spans which
 were first provided to the processor longer than this timeout ago are dropped from the
 list of watched spans and therefore updates will no longer be reported for them.
 This timeout, however, should only apply to this processor and MUST NOT affect spans
