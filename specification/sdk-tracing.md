@@ -265,7 +265,7 @@ high contention in a very high traffic service.
 This implementation passes spans that have been started but not yet ended
 to the configured exporter. These spans are called _unfinished_ spans.
 On each interval defined by `reportIntervalMillis`, all unfinished spans that
-have been started more than `reportIntervalMillis` ago, are exported as is.
+have been started more than `reportIntervalMillis` ago, are exported.
 
 **Configurable parameters:**
 
