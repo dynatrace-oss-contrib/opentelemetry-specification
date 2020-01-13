@@ -303,8 +303,7 @@ were first provided to the processor longer than this timeout ago are dropped fr
 list of watched spans and therefore updates will no longer be reported for them.
 This timeout, however, should only apply to this processor and MUST NOT affect spans
 that are ended properly after the timeout. If `exportEndedSpans` is set, the span MUST
-still be exported once ended. Other processors, including the simple and batching
-processor, will still export these spans as they normally would.
+still be exported once ended.
 
 
 ### Span Exporter
