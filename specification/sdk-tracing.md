@@ -289,9 +289,10 @@ have been started at least `reportIntervalMillis` ago, are exported.
   suitable_)
 
 In order to avoid multiple exports potentially being blocked on connection issues or
-when `reportIntervalMillis` is set inappropriately, exports should *not* be performed
-in parallel. If a previous export is still in progress on the next
-`reportIntervalMillis`, the current export should be skipped.
+when `reportIntervalMillis` is set inappropriately, exports SHOULD generally *not*
+be performed in parallel.
+If an export would normally happen while another export by this SpanProcessor is
+still running, the export is skipped.
 
 For languages that support the concept of weak references it is recommended to
 only use these for keeping references to unfinished spans in the processor.
