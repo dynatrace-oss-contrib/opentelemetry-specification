@@ -265,14 +265,14 @@ high contention in a very high traffic service.
 This implementation passes spans that have been started but not yet ended
 to the configured exporter. These spans are called _unfinished_ spans.
 On each interval defined by `reportIntervalMillis`, all unfinished spans that
-have been started more than `reportIntervalMillis` ago, are exported.
+have been started at least `reportIntervalMillis` ago, are exported.
 
 **Configurable parameters:**
 
-* `exporter` - the exporter where the spans are pushed.
+* `exporter` - the exporter to which the spans are pushed.
 * `maxWatchedSpans` - the maximum number of unfinished spans to be watched.
   While reached, no new spans will be accepted. The default value is `2048`.
-* `reportIntervalMillis` - the delay interval in milliseconds between two
+* `reportIntervalMillis` - the mimimum delay interval in milliseconds between two
   consecutive exports. The default value is `5000`.
 * `exporterTimeoutMillis` - how long the export can run before it is cancelled.
   The default value is `30000`.
@@ -284,7 +284,7 @@ have been started more than `reportIntervalMillis` ago, are exported.
 * `spanDurationTimeoutMillis` - On each report interval, spans older than
   `spanDurationTimeoutMillis` which have not yet ended will be dropped from
   the watch list.
-  The default is `60000`.
+  The default is `60000` (1 minute).
   (_only applies to languages where weak references are not supported or
   suitable_)
 
