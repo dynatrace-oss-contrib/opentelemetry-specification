@@ -300,7 +300,7 @@ Otherwise, it would accumulate references to spans abandoned by the user without
 ending them and therefore potentially leak memory.
 If weak references are not supported or suitable to be used, the timeout parameter
 `maxSpanDurationMillis` should be added for this processor. Unfinished spans which
-were first provided to the processor longer than this timeout ago are dropped from the
+were first provided to the processor longer ago than this timeout are dropped from the
 list of watched spans and therefore updates will no longer be reported for them.
 This timeout, however, should only apply to this processor and MUST NOT affect spans
 that are ended properly after the timeout. If `exportEndedSpans` is set, the span MUST
