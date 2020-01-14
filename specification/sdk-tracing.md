@@ -280,7 +280,7 @@ have been started at least `reportIntervalMillis` ago, are exported.
   smaller or equal to `maxWatchedSpans`. The default value is `512`.
 * `exportEndedSpans` (boolean) - if set, spans are also exported once they are
   ended.
-  The default value is `false`.
+  The default value is `true`.
 * `maxSpanDurationMillis` - On each report interval, spans older than
   `maxSpanDurationMillis` which have not yet ended will be dropped from
   the watch list.
