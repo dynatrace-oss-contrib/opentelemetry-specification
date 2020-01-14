@@ -281,8 +281,8 @@ have been started at least `reportIntervalMillis` ago, are exported.
 * `exportEndedSpans` (boolean) - if set, spans are also exported once they are
   ended.
   The default value is `true`.
-* `maxSpanDurationMillis` - On each report interval, spans older than
-  `maxSpanDurationMillis` which have not yet ended will be dropped from
+* `maxSpanAgeMillis` - On each report interval, spans older than
+  `maxSpanAgeMillis` which have not yet ended will be dropped from
   the watch list.
   The default is `60000` (1 minute).
   (_only applies to languages where weak references are not supported or
@@ -299,7 +299,7 @@ only use these for keeping references to unfinished spans in the processor.
 Otherwise, it would accumulate references to spans abandoned by the user without
 ending them and therefore potentially leak memory.
 If weak references are not supported or suitable to be used, the timeout parameter
-`maxSpanDurationMillis` should be added for this processor. Unfinished spans which
+`maxSpanAgeMillis` should be added for this processor. Unfinished spans which
 were first provided to the processor longer ago than this timeout are dropped from the
 list of watched spans and therefore updates will no longer be reported for them.
 This timeout, however, should only apply to this processor and MUST NOT affect spans
