@@ -271,7 +271,10 @@ have been started at least `reportIntervalMillis` ago, are exported.
 
 * `exporter` - the exporter to which the spans are pushed.
 * `maxWatchedSpans` - the maximum number of unfinished spans to be watched.
-  While reached, no new spans will be accepted. The default value is `2048`.
+  While reached, no new unfinished spans will be accepted. The default value is `1024`.
+* `maxEndedSpans` - the maximum number of ended spans waiting to be exported.
+  While reached, no new spans ended will be accepted. The default value is `2048`.
+  Only applicable if `exportEndedSpans` is set to `true`.
 * `reportIntervalMillis` - the mimimum delay interval in milliseconds between two
   consecutive exports. The default value is `5000`.
 * `exporterTimeoutMillis` - how long the export can run before it is cancelled.
@@ -305,6 +308,9 @@ list of watched spans and therefore updates will no longer be reported for them.
 This timeout, however, should only apply to this processor and MUST NOT affect spans
 that are ended properly after the timeout. If `exportEndedSpans` is set, the span MUST
 still be exported once ended.
+
+It is up to the implementation to apply the limits `maxWatchedSpans` and
+`maxEndedSpans` to all spans combined or to maintain two separate counters.
 
 
 ### Span Exporter
