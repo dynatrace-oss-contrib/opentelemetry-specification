@@ -16,7 +16,7 @@ This document defines standard labels for resources. These labels are typically 
 
 ## TODOs
 
-* Add more compute units: Process, Lambda Function, AppEngine unit, etc.
+* Add more compute units: Process, Function as a Service, AppEngine unit, etc.
 * Add Device (mobile) and Web Browser.
 * Decide if lower case strings only.
 * Consider to add optional/required for each label and combination of labels
@@ -56,7 +56,7 @@ service.name = Shop.shoppingcart
 
 ## Compute Unit
 
-Labels defining a compute unit (e.g. Container, Process, Lambda Function).
+Labels defining a compute unit (e.g. Container, Process, Function as a Service).
 
 ### Container
 
@@ -71,7 +71,7 @@ Labels defining a compute unit (e.g. Container, Process, Lambda Function).
 | container.image.tag | Container image tag. | `0.1` |
 
 
-### Lambda
+### Function as a Service
 
 **type:** `faas`
 
