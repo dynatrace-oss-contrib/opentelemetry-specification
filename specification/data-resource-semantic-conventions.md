@@ -70,6 +70,28 @@ Labels defining a compute unit (e.g. Container, Process, Lambda Function).
 | container.image.name | Name of the image the container was built on. | `gcr.io/opentelemetry/operator` |
 | container.image.tag | Container image tag. | `0.1` |
 
+
+### Lambda
+
+**type:** `faas`
+
+**Description:** A serverless instance.
+
+| Label  | Description  | Example  | Required |
+|---|---|---|--|
+| faas.region| A specific geographical location where the function is executed | `us-east-2` | Yes |
+| faas.name | The name of the function being executed | `opentelemetry-lambda` | Yes |
+| faas.identifier | The unique name of the function being executed. <br /> For example, in AWS this field correspond to the [ARN] value. | `opentelemetry-lambda` | Yes |
+| faas.version | The version of the function being executed | `opentelemetry-latest` | No |
+| faas.provider | Provider name of the function, e.g. `aws`, `gpc`, `azure`, `serverless`, ... | `aws` | No |
+| faas.payload | The input passed to the function | `{name: 'opentelemetry'}` | No |
+| faas.trigger | Type of the trigger that spawn the function, e.g. `http`, `S3`, `Pubsub`, ... | `http` | Yes |
+| faas.instance.id | String containing the unique execution id | `opentelemetry` | Yes |
+
+
+
+
+
 ## Deployment Service
 
 Labels defining a deployment service (e.g. Kubernetes).
@@ -120,3 +142,6 @@ Labels defining a running environment (e.g. Cloud, Data Center).
 | cloud.account.id | The cloud account id used to identify different entities. | `opentelemetry` |
 | cloud.region | A specific geographical location where different entities can run | `us-central1` |
 | cloud.zone | Zones are a sub set of the region connected through low-latency links.<br/> In aws it is called availability-zone. | `us-central1-a` |
+
+
+[ARN]:https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
