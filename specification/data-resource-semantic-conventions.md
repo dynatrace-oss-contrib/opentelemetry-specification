@@ -81,7 +81,7 @@ Labels defining a compute unit (e.g. Container, Process, Function as a Service).
 |---|---|---|--|
 | faas.name | The name of the function being executed. | `my-function` | Yes |
 | faas.identifier | The unique name of the function being executed. <br /> For example, in AWS Lambda this field corresponds to the [ARN] value, in GCP to the URI of the resource, and in Azure to the [FunctionDirectory] field. | `arn:aws:lambda:us-west-2:123456789012:function:my-function` | Yes |
-| faas.service | Platform name of the function, e.g. `aws-lambda`, `gcp`, `azure`, `serverless`, ... | `aws-lambda` | Yes |
+| faas.service | Platform name where the function is executed, e.g. `aws-lambda`, `cloud-functions`, `azure-functions`, ... | `aws-lambda` | Yes |
 | faas.version | The version string of the function being executed as defined in [Version Attributes]. | `semver:2.0.0` | No |
 
 
