@@ -7,5 +7,5 @@ Span `name` should be set to function name being executed. Depending on the trig
 | Attribute name  | Notes  and examples  | Required? |
 |---|---|--|
 | `component` | Denotes the type of the span and needs to be `"faas"` | Yes | 
-| `faas.trigger` | Type of the trigger that spawned the function. <br > The following spelling SHOULD be used for trigger strings: "event", "http", "manual", "pubsub", "timer". | Yes |
+| `faas.trigger` | Type of the trigger on which the function is executed. <br > The following spelling SHOULD be used for trigger strings: "event", "http", "manual", "pubsub", "timer". | Yes |
 | `faas.instance` | String containing the unique execution id of the function. E.g. `af9d5aa4-a685-4c5f-a22b-444f80b3cc28` | No |
