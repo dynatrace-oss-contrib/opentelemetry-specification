@@ -75,21 +75,14 @@ Labels defining a compute unit (e.g. Container, Process, Function as a Service).
 
 **type:** `faas`
 
-**Description:** A serverless instance.
+**Description:** An instance of a function that runs on a platform where underlying hardware concerns, such as provisioning and scaling, have been abstracted away by the platform.
 
-| Label  | Description  | Example  | Required |
+| Label  | Description  | Example  | Required? |
 |---|---|---|--|
-| faas.region| A specific geographical location where the function is executed. | `us-east-2` | Yes |
-| faas.name | The name of the function being executed. | `opentelemetry-lambda` | Yes |
-| faas.identifier | The unique name of the function being executed. <br /> For example, in AWS this field correspond to the [ARN] value, in GCP to the URI of the resource, and Azure to the [FunctionDirectory] field. | `opentelemetry-lambda` | Yes |
-| faas.version | The version of the function being executed. | `opentelemetry-latest` | No |
-| faas.provider | Provider name of the function, e.g. `aws`, `gpc`, `azure`, `serverless`, ... | `aws` | No |
-| faas.payload | The input passed to the function. | `{name: 'opentelemetry'}` | No |
-| faas.trigger | Type of the trigger that spawned the function, e.g. `http`, `S3`, `PubSub`, ... | `http` | Yes |
-| faas.instance.id | String containing the unique execution id. | `opentelemetry-0001` | Yes |
-
-
-
+| faas.name | The name of the function being executed. | `my-function` | Yes |
+| faas.identifier | The unique name of the function being executed. <br /> For example, in AWS Lambda this field corresponds to the [ARN] value, in GCP to the URI of the resource, and in Azure to the [FunctionDirectory] field. | `arn:aws:lambda:us-west-2:123456789012:function:my-function` | Yes |
+| faas.service | Platform name of the function, e.g. `aws-lambda`, `gcp`, `azure`, `serverless`, ... | `aws-lambda` | Yes |
+| faas.version | The version string of the function being executed as defined in [Version Attributes]. | `semver:2.0.0` | No |
 
 
 ## Deployment Service
@@ -144,5 +137,6 @@ Labels defining a running environment (e.g. Cloud, Data Center).
 | cloud.zone | Zones are a sub set of the region connected through low-latency links.<br/> In aws it is called availability-zone. | `us-central1-a` |
 
 
-[ARN]:https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
+[ARN]: https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html
 [FunctionDirectory]: https://github.com/Azure/azure-functions-host/wiki/Retrieving-information-about-the-currently-running-function
+[Version Attributes]: data-resource-semantic-conventions.md#version-attributes
