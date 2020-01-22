@@ -2,7 +2,7 @@
 
 This document defines how to describe an instance of a function that runs without provisioning or managing of servers (also known as serverless) with spans.
 
-Span `name` should be set to the function name being executed. Depending on the trigger of the function, additional attributes MUST be set. For example, an HTTP trigger MUST follow the [HTTP Server semantic conventions](data-http.md#http-server-semantic-conventions).
+Span `name` should be set to the function name being executed. Depending on the value of the `faas.trigger` attribute, additional attributes MUST be set. For example, an HTTP trigger MUST follow the [HTTP Server semantic conventions](data-http.md#http-server-semantic-conventions).
 
 If Spans following this convention are produced, a Resource of type `faas` MUST exist following the [Resource semantic convention](data-resource-semantic-conventions.md#function-as-a-service). 
 
