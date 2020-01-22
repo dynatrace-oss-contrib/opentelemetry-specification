@@ -10,16 +10,16 @@ If Spans following this convention are produced, a Resource of type `faas` MUST 
 |---|---|--|
 | `component` | Denotes the type of the span and needs to be `"faas"` | Yes | 
 | `faas.trigger` | Type of the trigger on which the function is executed. <br > The following spelling SHOULD be used for trigger strings: "event", "http", "manual", "pubsub", "timer". | Yes |
-| `faas.id` | String containing the unique execution id of the function. E.g. `af9d5aa4-a685-4c5f-a22b-444f80b3cc28` | No |
+| `faas.execution` | String containing the unique execution id of the function. E.g. `af9d5aa4-a685-4c5f-a22b-444f80b3cc28` | No |
 
-## Difference between id and instance
+## Difference between execution and instance
 
 For performance reasons (e.g. [AWS lambda], or [Azure functions]), FaaS providers allocate an execution environment for a single instance of a function that is used to serve multiple requests.
-Developers exploit this fact to solve the **cold start** issue, caching expensive resources computation between different function execution. 
+Developers exploit this fact to solve the **cold start** issue, caching expensive resource computations between different function executions. 
 Furthermore, FaaS providers encourage this behavior, e.g. [Google functions].
-Therefore, the attribute `faas.id` differs from `faas.instance` in the following:
+Therefore, the attribute `faas.execution` differs from `faas.instance` in the following:
 
-    - `faas.id` refers to the current request ID handled by the function;
+    - `faas.execution` refers to the current request ID handled by the function;
     - `faas.instance` refers to the execution environment ID of the function.
 
 
