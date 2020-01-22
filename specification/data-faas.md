@@ -2,7 +2,7 @@
 
 This document defines how to describe an instance of a function that runs without provisioning or managing of servers (also known as serverless) with spans.
 
-Span `name` should be set to the function name being executed. Depending on the trigger of the function, additional attributes MUST be set. For example, an HTTP trigger must set the `SpanKind` to `Server` and follow the [HTTP Server semantic conventions](data-http.md#http-server-semantic-conventions).
+Span `name` should be set to the function name being executed. Depending on the trigger of the function, additional attributes MUST be set. For example, an HTTP trigger MUST set the `SpanKind` to `Server` and MUST follow the [HTTP Server semantic conventions](data-http.md#http-server-semantic-conventions).
 
 If Spans following this convention are produced, a Resource of type `faas` MUST exist following the [Resource semantic convention](data-resource-semantic-conventions.md#function-as-a-service). 
 
@@ -17,7 +17,7 @@ If Spans following this convention are produced, a Resource of type `faas` MUST 
 For performance reasons (e.g. [AWS lambda], or [Azure functions]), FaaS providers allocate an execution environment for a single instance of a function that is used to serve multiple requests.
 Developers exploit this fact to solve the **cold start** issue, caching expensive resource computations between different function executions. 
 Furthermore, FaaS providers encourage this behavior, e.g. [Google functions].
-Therefore, the attribute `faas.execution` differs from `faas.instance` in the following:
+Therefore, the span attribute `faas.execution` differs from the resource attribute `faas.instance` in the following:
 
     - `faas.execution` refers to the current request ID handled by the function;
     - `faas.instance` refers to the execution environment ID of the function.
