@@ -16,7 +16,7 @@ This document defines standard labels for resources. These labels are typically 
 
 ## TODOs
 
-* Add more compute units: Process, Function as a Service, AppEngine unit, etc.
+* Add more compute units: Process, AppEngine unit, etc.
 * Add Device (mobile) and Web Browser.
 * Decide if lower case strings only.
 * Consider to add optional/required for each label and combination of labels
