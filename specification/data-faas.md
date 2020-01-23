@@ -8,7 +8,7 @@ This document defines how to describe an instance of a function that runs withou
 <!-- toc -->
 
 - [General Attributes](#general-attributes)
-  * [Difference between execution and instance](#data-faas#difference-between-execution-and-instance)
+  * [Difference between execution and instance](#difference-between-execution-and-instance)
 - [Function Type](#function-type)
   * [Event](#event)
   * [HTTP](#http)
@@ -37,8 +37,8 @@ Developers exploit this fact to solve the **cold start** issue, caching expensiv
 Furthermore, FaaS providers encourage this behavior, e.g. [Google functions].
 Therefore, the span attribute `faas.execution` differs from the resource attribute `faas.instance` in the following:
 
-    - `faas.execution` refers to the current request ID handled by the function;
-    - `faas.instance` refers to the execution environment ID of the function.
+- `faas.execution` refers to the current request ID handled by the function;
+- `faas.instance` refers to the execution environment ID of the function.
 
 [AWS lambda]: https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html
 [Azure functions]: https://docs.microsoft.com/en-us/azure/azure-functions/manage-connections#static-clients
