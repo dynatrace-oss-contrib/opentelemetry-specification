@@ -27,7 +27,7 @@ If Spans following this convention are produced, a Resource of type `faas` MUST 
 | Attribute name  | Notes  and examples  | Required? |
 |---|---|--|
 | `component` | Denotes the type of the span and needs to be `"faas"` | Yes | 
-| `faas.trigger` | Type of the trigger on which the function is executed. <br > The following spelling SHOULD be used for trigger strings: "datasource", "http", "pubsub", "timer", or "other". | Yes |
+| `faas.trigger` | Type of the trigger on which the function is executed. <br > it SHOULD be one of the following strings: "datasource", "http", "pubsub", "timer", or "other". | Yes |
 | `faas.execution` | String containing the unique execution id of the function. E.g. `af9d5aa4-a685-4c5f-a22b-444f80b3cc28` | No |
 
 ## Difference between execution and instance
