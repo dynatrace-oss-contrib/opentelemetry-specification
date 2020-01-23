@@ -50,14 +50,13 @@ This section describes how to handle the span creation and additional attributes
 
 ## Datasource
 
-A function is set to respond as callback when operations on a datasource are perfomed.
-For `faas` spans with trigger `datasource` it is recommended to set the following attributes. 
-
+A function is set to respond as callback when an operation on a datasource is perfomed.
+For `faas` spans with trigger `datasource`, it is recommended to set the following attributes. 
 
 | Attribute name  | Notes  and examples  | Required? |
 |---|---|--|
-| `faas.document.collection` | Represents the name of the source on which the operation was perfomed. For example, in Cloud Storage or S3 corresponds to the bucket name, and in Cosmos DB to the database name. | Yes |
-| `faas.document.operation`  | Describes the type of the operation that was performed on the data.<br /> It SHOULD be one of the following strings: "insert", "edit", "delete" | Yes |
+| `faas.document.collection` | The name of the source on which the operation was perfomed. For example, in Cloud Storage or S3 corresponds to the bucket name, and in Cosmos DB to the database name. | Yes |
+| `faas.document.operation`  | Describes the type of the operation that was performed on the data.<br /> It SHOULD be one of the following strings: "insert", "edit", "delete". | Yes |
 | `faas.document.time`       | A string containing the time when the data was accessed in the [ISO 8601] format expressed in [UTC]. E.g. `"2020-01-23T13:47:06Z"` | Yes |
 | `faas.document.name`       | The document name/table subjected to the operation.<br /> For example, in Cloud Storage or S3 is the name of the file, and in Cosmos DB the table name.  | No |
 
