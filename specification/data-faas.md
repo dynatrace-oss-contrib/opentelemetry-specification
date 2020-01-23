@@ -50,7 +50,7 @@ This section describes how to handle the span creation and additional attributes
 
 ## Datasource
 
-A function is set to respond as callback when an operation on a datasource is perfomed.
+A datasource function is triggered as a response to some data source operation such as a database or filesystem read/write.
 For `faas` spans with trigger `datasource`, it is recommended to set the following attributes. 
 
 | Attribute name  | Notes  and examples  | Required? |
