@@ -3,16 +3,24 @@
 This document defines standard labels for resources. These labels are typically used in the [Resource](sdk-resource.md) and are also recommended to be used anywhere else where there is a need to describe a resource in a consistent manner. The majority of these labels are inherited from
 [OpenCensus Resource standard](https://github.com/census-instrumentation/opencensus-specs/blob/master/resource/StandardResources.md).
 
-* [Service](#service)
-* [Compute Unit](#compute-unit)
+<!-- Re-generate TOC with `markdown-toc --no-first-h1 -i` -->
+
+<!-- toc -->
+
+- [TODOs](#todos)
+  * [Document Conventions](#document-conventions)
+- [Service](#service)
+- [Compute Unit](#compute-unit)
   * [Container](#container)
-* [Deployment Service](#deployment-service)
+  * [Function as a Service](#function-as-a-service)
+- [Deployment Service](#deployment-service)
   * [Kubernetes](#kubernetes)
-* [Compute Instance](#compute-instance)
+- [Compute Instance](#compute-instance)
   * [Host](#host)
-* [Environment](#environment)
+- [Environment](#environment)
   * [Cloud](#cloud)
-  * [Cluster](#cluster)
+
+<!-- tocstop -->
 
 ## TODOs
 

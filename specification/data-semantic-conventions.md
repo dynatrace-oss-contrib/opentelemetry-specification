@@ -24,4 +24,4 @@ The following semantic conventions for spans are defined:
 * [HTTP](data-http.md): Spans for HTTP client and server.
 * [Database](data-database.md): Spans for SQL and NoSQL client calls.
 * [RPC/RMI](data-rpc.md): Spans for remote procedure calls (e.g., gRPC).
-* [FaaS](data-faas.md): Spans for Function as a Service (e.g. AWS Lambda).
+* [FaaS](data-faas.md): Spans for Function as a Service (e.g., AWS Lambda).
