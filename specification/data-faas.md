@@ -34,7 +34,8 @@ If Spans following this convention are produced, a Resource of type `faas` MUST 
 For performance reasons (e.g. [AWS lambda], or [Azure functions]), FaaS providers allocate an execution environment for a single instance of a function that is used to serve multiple requests.
 Developers exploit this fact to solve the **cold start** issue, caching expensive resource computations between different function executions. 
 Furthermore, FaaS providers encourage this behavior, e.g. [Google functions].
-Therefore, the span attribute `faas.execution` differs from the resource attribute `faas.instance` in the following:
+This field MAY be set to help correlate function executions that belong to the same execution environment. 
+The span attribute `faas.execution` differs from the resource attribute `faas.instance` in the following:
 
 - `faas.execution` refers to the current request ID handled by the function;
 - `faas.instance` refers to the execution environment ID of the function.
