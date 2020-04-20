@@ -8,6 +8,7 @@ groups:
     attributes:
       - id: trigger
         required: always
+        sampling_relevant: true
         brief: 'Type of the trigger on which the function is executed.'
         type:
           allow_custom_values: false

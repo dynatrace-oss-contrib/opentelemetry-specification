@@ -6,6 +6,7 @@ groups:
       - id: service
         type: string
         required: always
+        sampling_relevant: true
         brief: 'The service name, must be equal to the $service part in the span name.'
         examples: "EchoService"
     constraints:
