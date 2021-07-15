@@ -1,6 +1,7 @@
 groups:
   - id: messaging
     prefix: messaging
+    type: span
     brief: >
         This document defines the attributes used in
         messaging systems.
@@ -82,12 +83,14 @@ groups:
   - id: messaging.producer
     prefix: messaging
     extends: messaging
+    type: span
     span_kind: producer
     brief: 'Semantic convention for producers of messages sent to a messaging systems.'
 
   - id: messaging.producer.synchronous
     prefix: messaging
     extends: messaging
+    type: span
     span_kind: client
     brief: >
       Semantic convention for clients of messaging systems that produce messages
@@ -96,6 +99,7 @@ groups:
   - id: messaging.consumer
     prefix: messaging
     extends: messaging
+    type: span
     span_kind: consumer
     brief: 'Semantic convention for a consumer of messages received from a messaging system'
     attributes:
@@ -116,6 +120,7 @@ groups:
   - id: messaging.consumer.synchronous
     prefix: messaging
     extends: messaging.consumer
+    type: span
     span_kind: server
     brief: >
       Semantic convention for servers that consume messages received from messaging systems
@@ -124,6 +129,7 @@ groups:
   - id: messaging.rabbitmq
     prefix: messaging.rabbitmq
     extends: messaging
+    type: span
     brief: >
       Attributes for RabbitMQ
     attributes:
@@ -138,6 +144,7 @@ groups:
   - id: messaging.kafka
     prefix: messaging.kafka
     extends: messaging
+    type: span
     brief: >
       Attributes for Apache Kafka
     attributes:

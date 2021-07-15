@@ -1,6 +1,7 @@
 groups:
   - id: db
     prefix: db
+    type: span
     brief: >
       This document defines the attributes used to perform database client calls.
     span_kind: client
@@ -236,6 +237,7 @@ groups:
   - id: db.mssql
     prefix: db.mssql
     extends: db
+    type: span
     brief: >
       Connection-level attributes for Microsoft SQL Server
     attributes:
@@ -253,6 +255,7 @@ groups:
   - id: db.cassandra
     prefix: db.cassandra
     extends: db
+    type: span
     brief: >
       Call-level attributes for Cassandra
     attributes:
@@ -338,6 +341,7 @@ groups:
   - id: db.hbase
     prefix: db.hbase
     extends: db
+    type: span
     brief: >
       Call-level attributes for Apache HBase
     attributes:
@@ -353,6 +357,7 @@ groups:
   - id: db.redis
     prefix: db.redis
     extends: db
+    type: span
     brief: >
       Call-level attributes for Redis
     attributes:
@@ -369,6 +374,7 @@ groups:
   - id: db.mongodb
     prefix: db.mongodb
     extends: db
+    type: span
     brief: >
       Call-level attributes for MongoDB
     attributes:
@@ -383,6 +389,7 @@ groups:
   - id: db.sql
     prefix: 'db.sql'
     extends: 'db'
+    type: span
     brief: >
       Call-level attrbiutes for SQL databases
     attributes:
@@ -402,6 +409,7 @@ groups:
 
   - id: db.tech
     brief: "Semantic convention group for specific technologies"
+    type: span
     constraints:
       - include: 'db.cassandra'
       - include: 'db.hbase'

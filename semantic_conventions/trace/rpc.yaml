@@ -1,6 +1,7 @@
 groups:
   - id: rpc
     prefix: rpc
+    type: span
     brief: 'This document defines semantic conventions for remote procedure calls.'
     attributes:
       - id: system
@@ -49,6 +50,7 @@ groups:
   - id: rpc.grpc
     prefix: rpc.grpc
     extends: rpc
+    type: span
     brief: 'Tech-specific attributes for gRPC.'
     attributes:
       - id: status_code
@@ -93,6 +95,7 @@ groups:
   - id: rpc.jsonrpc
     prefix: rpc.jsonrpc
     extends: rpc
+    type: span
     brief: 'Tech-specific attributes for [JSON RPC](https://www.jsonrpc.org/).'
     attributes:
       - id: version
