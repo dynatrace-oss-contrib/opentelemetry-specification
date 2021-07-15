@@ -11,9 +11,15 @@ All attributes are lower case.
 groups ::= semconv
        | semconv groups
 
-semconv ::= id brief [note] [prefix] [extends] [span_kind] attributes [constraints]
+semconv ::= id type brief [note] [prefix] [extends] [span_kind] attributes [constraints]
 
 id    ::= string
+type  ::= semconv_type
+
+semconv_type ::= "span"
+             |   "metric"
+             |   "resource"
+
 brief ::= string
 note  ::= string
 
@@ -78,6 +84,7 @@ Groups contain the list of semantic conventions and it is the root node of each 
 The field `semconv` represents a semantic convention and it is made by:
 
 - `id`, string that uniquely identifies the semantic convention.
+- `type`, the type of semantic convention (span, metric or resource)
 - `brief`, string, a brief description of the semantic convention.
 - `note`, optional string, a more elaborate description of the semantic convention.
     It defaults to an empty string.
