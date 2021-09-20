@@ -19,6 +19,7 @@
   * [Attributes specific to certain messaging systems](#attributes-specific-to-certain-messaging-systems)
     + [RabbitMQ](#rabbitmq)
     + [Apache Kafka](#apache-kafka)
+    + [CloudEvents](#cloudevents)
 - [Examples](#examples)
   * [Topic with multiple consumers](#topic-with-multiple-consumers)
   * [Apache Kafka with Quarkus or Spring Boot Example](#apache-kafka-with-quarkus-or-spring-boot-example)
@@ -224,10 +225,10 @@ For CloudEvents clients, the following attributes are defined:
 <!-- semconv messaging.cloudevents -->
 | Attribute  | Type | Description  | Examples  | Required |
 |---|---|---|---|---|
-| `messaging.cloudevents.id` | string | The [id](https://github.com/cloudevents/spec/blob/master/spec.md#id) identifies the event within the scope of a producer. | `123e4567-e89b-12d3-a456-426614174000`; `producer-1` | No |
+| `messaging.cloudevents.event_id` | string | The [event_id](https://github.com/cloudevents/spec/blob/master/spec.md#id) identifies the event within the scope of a producer. | `123e4567-e89b-12d3-a456-426614174000`; `producer-1` | No |
 | `messaging.cloudevents.source` | string | The [source](https://github.com/cloudevents/spec/blob/master/spec.md#source-1) identifies the context in which an event happened. | `my-service` | No |
 | `messaging.cloudevents.spec_version` | string | The [version of the CloudEvents specification](https://github.com/cloudevents/spec/blob/master/spec.md#specversion) which the event uses. | `1.0` | No |
-| `messaging.cloudevents.type` | string | The [type](https://github.com/cloudevents/spec/blob/master/spec.md#type) contains a value describing the type of event related to the originating occurrence. | `com.github.pull_request.opened`; `com.example.object.deleted.v2` | No |
+| `messaging.cloudevents.event_type` | string | The [event_type](https://github.com/cloudevents/spec/blob/master/spec.md#type) contains a value describing the type of event related to the originating occurrence. | `com.github.pull_request.opened`; `com.example.object.deleted.v2` | No |
 | `messaging.cloudevents.data_content_type` | string | The [content type](https://github.com/cloudevents/spec/blob/master/spec.md#datacontenttype) of the event `data` value. [1] | `application/json` | No |
 | `messaging.cloudevents.subject` | string | The [subject](https://github.com/cloudevents/spec/blob/master/spec.md#subject) of the event in the context of the event producer (identified by source). | `mynewfile.jpg` | No |
 
