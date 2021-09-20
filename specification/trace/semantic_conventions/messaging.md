@@ -219,7 +219,7 @@ If an intermediary broker is present, `service.name` and `peer.service` will not
 
 #### CloudEvents
 
-For CloudEvents clients, the following attributes are defined:
+For [CloudEvents](https://cloudevents.io/) clients, the following attributes are defined:
 
 <!-- semconv messaging.cloudevents -->
 | Attribute  | Type | Description  | Examples  | Required |
