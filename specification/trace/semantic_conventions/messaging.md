@@ -217,6 +217,23 @@ For Apache Kafka producers, [`peer.service`](./span-general.md#general-remote-se
 The `service.name` of a Consumer's Resource SHOULD match the `peer.service` of the Producer, when the message is directly passed to another service.
 If an intermediary broker is present, `service.name` and `peer.service` will not be the same.
 
+#### CloudEvents
+
+For CloudEvents clients, the following attributes are defined:
+
+<!-- semconv cloudevents -->
+| Attribute  | Type | Description  | Examples  | Required |
+|---|---|---|---|---|
+| `cloudevents.id` | string | The [unique identifier](https://github.com/cloudevents/spec/blob/master/spec.md#id) of the event within the scope of the producer. | `123e4567-e89b-12d3-a456-426614174000`; `producer-1` | No |
+| `cloudevents.source` | string | The [source](https://github.com/cloudevents/spec/blob/master/spec.md#source-1) that identifies where the event happened. | `com.github.pull_request.opened`; `com.example.object.deleted.v2` | No |
+| `cloudevents.specversion` | string | The [version of the CloudEvents specification](https://github.com/cloudevents/spec/blob/master/spec.md#specversion) which the event uses. | `1.0` | No |
+| `cloudevents.type` | string | The [type](https://github.com/cloudevents/spec/blob/master/spec.md#type) of event. | `com.github.pull_request.opened`; `com.example.object.deleted.v2` | No |
+| `cloudevents.datacontenttype` | string | The [content type](https://github.com/cloudevents/spec/blob/master/spec.md#datacontenttype) of the event `data` value. [1] | `application/json` | No |
+| `cloudevents.subject` | string | The [subject](https://github.com/cloudevents/spec/blob/master/spec.md#subject) of the event in the context of the event producer (identified by source). | `mynewfile.jpg` | No |
+
+**[1]:** If present, MUST adhere to the format specified in [RFC 2046](https://datatracker.ietf.org/doc/html/rfc2046)
+<!-- endsemconv -->
+
 ## Examples
 
 ### Topic with multiple consumers
