@@ -178,7 +178,7 @@ For message consumers, the following additional attributes may be set:
 | `process` | process |
 <!-- endsemconv -->
 
-The _receive_ span is be used to track the time used for receiving the message(s), whereas the _process_ span(s) track the time for processing the message(s).
+The _receive_ span is used to track the time spent for receiving the message(s), whereas the _process_ span(s) is used to track the time spent for processing the message(s).
 Note that one or multiple Spans with `messaging.operation` = `process` may often be the children of a Span with `messaging.operation` = `receive`.
 The distinction between receiving and processing of messages is not always of particular interest or sometimes hidden away in a framework (see the [Message consumption](#message-consumption) section above) and therefore the attribute can be left out.
 For batch receiving and processing (see the [Batch receiving](#batch-receiving) and [Batch processing](#batch-processing) examples below) in particular, the attribute SHOULD be set.
@@ -220,7 +220,11 @@ If an intermediary broker is present, `service.name` and `peer.service` will not
 
 #### CloudEvents
 
-For [CloudEvents](https://cloudevents.io/) clients, the following attributes are defined:
+For [CloudEvents](https://cloudevents.io/) clients, the `messaging.system` MUST be set to `cloudevents`. The `messaging.destination` SHOULD be set to `<event type> <operation name>`. If known, the `messaging.protocol` MAY be set to the underlying protocol used by the CloudEvents client. 
+
+In addition, the following attributes are defined for CloudEvents:
+
+ the following attributes are defined:
 
 <!-- semconv messaging.cloudevents -->
 | Attribute  | Type | Description  | Examples  | Required |
