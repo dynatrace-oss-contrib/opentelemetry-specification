@@ -1,6 +1,6 @@
 # CloudEvents
 
-This document defines how to apply semantic conventions when instrumenting code that uses [CloudEvents](https://cloudevents.io/). 
+This document defines how to apply semantic conventions when instrumenting code that uses [CloudEvents](https://cloudevents.io/).
 These semantic conventions are general and not tied to any protocol used to send/receive the events.
 
 **Status**: [Experimental](../../document-status.md)
