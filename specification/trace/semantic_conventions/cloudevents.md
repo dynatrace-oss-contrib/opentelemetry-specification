@@ -2,7 +2,7 @@
 
 This document defines how to describe sending and receiving [CloudEvents](https://cloudevents.io/) with spans.
 
-The transport involved in sending/receiving CloudEvents is represented by a separated span, depending on the underlying protocol used.
+The transport involved in sending/receiving CloudEvents is represented by a separate span, depending on the underlying protocol used.
 
 **Status**: [Experimental](../../document-status.md)
 
