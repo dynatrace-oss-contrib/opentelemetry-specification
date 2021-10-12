@@ -2,8 +2,7 @@
 
 **Status**: [Experimental](../../document-status.md)
 
-This specification defines attributes for [CloudEvents](https://cloudevents.io/).
-The attributes described in this document are not specific to a particular operation but rather generic. They may be used in any Span they apply to.
+This specification defines semantic conventions for [CloudEvents](https://cloudevents.io/). It covers creation, processing and context propagation between producer and consumer. It does not cover transport aspects of publishing and receiving cloud events.
 
 <!-- Re-generate TOC with `markdown-toc --no-first-h1 -i` -->
 
@@ -13,7 +12,29 @@ The attributes described in this document are not specific to a particular opera
 
 <!-- tocstop -->
 
+## Spans
+
+### Creation
+
+When CloudEvent is created and does not have [Distributed Context Extension](https://github.com/cloudevents/spec/blob/v1.0.1/extensions/distributed-tracing.md) populated, instrumentation SHOULD create a new PRODUCER span.
+
+**Note:** to be individually traceable, every CloudEvent has to have individual trace context (which is achieved with span creation).
+
+If PRODUCER span for CloudEvent was created, instrumentation MUST populate [Distributed Context Extension](https://github.com/cloudevents/spec/blob/v1.0.1/extensions/distributed-tracing.md) using [W3C Trace Context](https://w3c.github.io/trace-context/) propagator.
+
+**Span name:** `create <event_type>`
+
+### Processing
+
+To trace CloudEvent(s) processing, instrumentation SHOULD create a new CONSUMER span.
+If single event is processed, instrumentation SHOULD use remote context from distributed context extension as a parent. Instrumentation MAY use links in case of single message processing.
+If multiple events are processed together, instrumentation MUST set links with all distributed tracing contexts being processed on CONSUMER span.
+
+**Span name:** `process <event_type>`
+
 ## Attributes
+
+Attributes are applicable to creation and processing spans.
 
 <!-- semconv cloudevents -->
 | Attribute  | Type | Description  | Examples  | Required |
