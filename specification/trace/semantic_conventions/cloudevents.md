@@ -4,6 +4,12 @@
 
 This specification defines semantic conventions for [CloudEvents](https://cloudevents.io/). It covers creation, processing and context propagation between producer and consumer. It does not cover transport aspects of publishing and receiving cloud events.
 
+## Overview
+
+To be individually traceable, every CloudEvent has to have individual trace context, which is populated on [Distributed Context Extension](https://github.com/cloudevents/spec/blob/v1.0.1/extensions/distributed-tracing.md).
+
+Trace context is not intended to be modified once populated - it flows through any intermediaries from producer to consumer.
+
 <!-- Re-generate TOC with `markdown-toc --no-first-h1 -i` -->
 
 <!-- toc -->
@@ -16,21 +22,24 @@ This specification defines semantic conventions for [CloudEvents](https://cloude
 
 ### Creation
 
-When CloudEvent is created and does not have [Distributed Context Extension](https://github.com/cloudevents/spec/blob/v1.0.1/extensions/distributed-tracing.md) populated, instrumentation SHOULD create a new PRODUCER span.
+Instrumentation SHOULD create a new span and populate 'Distributed Context Extension' on the event. It applies when:
 
-**Note:** to be individually traceable, every CloudEvent has to have individual trace context (which is achieved with span creation).
+- CloudEvent is created by instrumented library
+- CloudEvent created outside of instrumented library, but passed without 'Distributed Context Extension'
 
-If PRODUCER span for CloudEvent was created, instrumentation MUST populate [Distributed Context Extension](https://github.com/cloudevents/spec/blob/v1.0.1/extensions/distributed-tracing.md) using [W3C Trace Context](https://w3c.github.io/trace-context/) propagator.
+In case CouldEvent is passed to instrumentation with a valid distributed context, instrumentation MUST NOT create a span and MUST NOT modify distributes context extension.
 
-**Span name:** `create <event_type>`
+**Span name:** `CloudEvent Create <event_type>`
+**Span kind:** PRODUCER
 
 ### Processing
 
-To trace CloudEvent(s) processing, instrumentation SHOULD create a new CONSUMER span.
-If single event is processed, instrumentation SHOULD use remote context from distributed context extension as a parent. Instrumentation MAY use links in case of single message processing.
-If multiple events are processed together, instrumentation MUST set links with all distributed tracing contexts being processed on CONSUMER span.
+To trace CloudEvent(s) processing, instrumentation SHOULD create a new span.
+If single event is processed, instrumentation SHOULD use remote context from 'distributed context extension' as a parent. Instrumentation MAY use links in case of single message processing.
+If multiple events are processed together, instrumentation MUST set links with all distributed tracing contexts being processed on a span.
 
-**Span name:** `process <event_type>`
+**Span name:** `CloudEvent Process <event_type>`
+**Span kind:** CONSUMER
 
 ## Attributes
 
