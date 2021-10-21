@@ -27,7 +27,7 @@ Instrumentation SHOULD create a new span and populate the [Distributed Tracing E
 - A CloudEvent is created by the instrumented library. It may be impossible or impractical to create the Span during event creation (e.g. inside the constructor or in a factory method) - instrumentation MAY create the Span later, when passing the event to the transport layer.
 - CloudEvent is created outside of instrumented library, but passed without 'Distributed Tracing Extension'
 
-In case CloudEvent is passed to instrumented library with the Distributed Tracing Extension populated, instrumentation MUST NOT create a span and MUST NOT modify Distributed Tracing Extension on the event.
+In case a CloudEvent is passed to the instrumented library with the Distributed Tracing Extension populated, instrumentation MUST NOT create a span and MUST NOT modify the Distributed Tracing Extension on the event.
 
 **Span name:** `CloudEvents Create <event_type>`
 **Span kind:** PRODUCER
