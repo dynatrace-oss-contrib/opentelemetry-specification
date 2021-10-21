@@ -35,7 +35,7 @@ In case CloudEvent is passed to instrumented library with the Distributed Tracin
 ### Processing
 
 To trace the processing of one or more CloudEvents, instrumentation SHOULD create a new span.
-If a single event is processed, instrumentation SHOULD use the remote trace context from Distributed Tracing Extension as a parent. Instrumentation MAY use links in case of single message processing.
+If a single event is processed, instrumentation SHOULD use the remote trace context from Distributed Tracing Extension as a parent or MAY instead add it as a link on the processing span.
 If multiple events are processed together, for each event being processed, if the event has Distributed Tracing Extension populated, instrumentation MUST add a link to the trace context from the extension on the processing span.
 
 **Span name:** `CloudEvents Process <event_type>`
