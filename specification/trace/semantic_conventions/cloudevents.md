@@ -24,10 +24,10 @@ Once the trace context is set on the event, it MUST not be modified.
 
 Instrumentation SHOULD create a new span and populate the [Distributed Tracing Extension](https://github.com/cloudevents/spec/blob/v1.0.1/extensions/distributed-tracing.md) on the event. This applies when:
 
-- CloudEvent is created by instrumented library. It may be impossible or impractical to create span in CloudEvent constructor (or factory) - instrumentation MAY create span later when passing event to transport layer.
-- CloudEvent is created outside of instrumented library, but passed without 'Distributed Tracing Extension'
+- A CloudEvent is created by the instrumented library. It may be impossible or impractical to create the Span during event creation (e.g. inside the constructor or in a factory method) - instrumentation MAY create the Span later, when passing the event to the transport layer.
+- A CloudEvent is created outside of the instrumented library (e.g. directly constructed by the application owner, without calling a constructor or factory method), but passed without the 'Distributed Tracing Extension' populated.
 
-In case CloudEvent is passed to instrumented library with the Distributed Tracing Extension populated, instrumentation MUST NOT create a span and MUST NOT modify Distributed Tracing Extension on the event.
+In case a CloudEvent is passed to the instrumented library with the Distributed Tracing Extension populated, instrumentation MUST NOT create a span and MUST NOT modify the Distributed Tracing Extension on the event.
 
 **Span name:** `CloudEvents Create <event_type>`
 **Span kind:** PRODUCER
