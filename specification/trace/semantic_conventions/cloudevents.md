@@ -14,10 +14,12 @@ Once the trace context is set on the event, it MUST not be modified.
 
 <!-- toc -->
 
-- [Spans](#spans)
-  * [Creation](#creation)
-  * [Processing](#processing)
-- [Attributes](#attributes)
+- [CloudEvents](#cloudevents)
+  - [Overview](#overview)
+  - [Spans](#spans)
+    - [Creation](#creation)
+    - [Processing](#processing)
+  - [Attributes](#attributes)
 
 <!-- tocstop -->
 
@@ -37,13 +39,12 @@ In case a CloudEvent is passed to the instrumented library with the Distributed 
 
 ### Processing
 
-To trace the processing of one or more CloudEvents, instrumentation SHOULD create a new span.
-If a single event is processed, instrumentation SHOULD use the remote trace context from the Distributed Tracing Extension as a parent or MAY instead add it as a link on the processing span.
-
-If multiple events are processed together, for each event being processed, if the event has the Distributed Tracing Extension populated, instrumentation MUST add a link to the trace context from the extension on the processing span.
+When instrumented library supports processing of a single CloudEvent, instrumentation SHOULD create a new span to trace it. Instrumentation SHOULD set the remote trace context from the Distributed Tracing Extension as a link on the processing span.
 
 **Span name:** `CloudEvents Process <event_type>`
 **Span kind:** CONSUMER
+
+Note: CloudEvents processing does not follow a common pattern. Some CloudEvents-enabled libraries expose handlers for CloudEvents processing (e.g.  [CloudEvents Go SDK](https://github.com/cloudevents/sdk-go#receive-your-first-cloudevent)) and are able to instrument processing calls. In other cases CloudEvents are deserialized or processed in application code and then application is responsible for instrumentation.
 
 ## Attributes
 
