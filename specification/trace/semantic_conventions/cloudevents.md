@@ -42,7 +42,7 @@ When instrumented library supports processing of a single CloudEvent, instrument
 **Span name:** `CloudEvents Process <event_type>`
 **Span kind:** CONSUMER
 
-Note: CloudEvents processing does not follow a common pattern. Some libraries that work with CloudEvents expose handlers for processing (e.g.  [CloudEvents Go SDK](https://github.com/cloudevents/sdk-go#receive-your-first-cloudevent)) and are able to auto-instrument processing calls. In other cases, when library does not have CloudEvent handler or users choose not to use it, CloudEvents are deserialized or processed in application code. In this case, the instrumentation responsibility falls under the application owner.
+Note: CloudEvents processing does not follow a common pattern. Some "CloudEvents-enabled" libraries expose handlers for processing (e.g.  [CloudEvents Go SDK](https://github.com/cloudevents/sdk-go#receive-your-first-cloudevent)) and can auto-instrument the processing calls. Alternatively, a library might offer a handler, but the user chooses not to use it, or a library does not offer one at all. In such cases, the instrumentation responsibility falls under the application owner.
 
 ## Attributes
 
