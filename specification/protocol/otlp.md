@@ -168,13 +168,17 @@ The server SHOULD respond with success no sooner than after successfully
 decoding and validating the request.
 
 The server MUST leave the `partial_success` field unset
-in case of a successfull response.
+in case of a successful response.
 
 ##### Partial Success
 
-If the processing of the request is partially successfull
-(i.e. when the server accepts only parts of the data and rejects the rest) the
-server MUST respond with the same message types as specified on the Success case.
+If the processing of the request is partially successful
+(i.e. when the server accepts only parts of the data and rejects the rest), the
+server response MUST be a
+Protobuf-encoded [Export*ServiceResponse](https://github.com/open-telemetry/opentelemetry-proto) message
+(`ExportTraceServiceResponse` for traces,
+`ExportMetricsServiceResponse` for metrics and
+`ExportLogsServiceResponse` for logs).
 
 Additionally, the server MUST initialize the `partial_success` field
 (`ExportTracePartialSuccess` message for traces,
@@ -185,7 +189,7 @@ the number of spans/data points/log records it accepted.
 
 The server MAY populate the `error_message` field with a human-readable
 error message in English. The protocol does not attempt to define the content
-nor structure of such error message, but it SHOULD generally offer guidance
+nor structure of such error message, but it should generally offer guidance
 on how users can address the issues.
 
 ##### Failures
@@ -446,14 +450,17 @@ The server SHOULD respond with success no sooner than after successfully
 decoding and validating the request.
 
 The server MUST leave the `partial_success` field unset
-in case of a successfull response.
+in case of a successful response.
 
 ##### Partial Success
 
-If the processing of the request is partially successfull
-(i.e. when the server accepts only parts of the data and rejects the rest) the
-server MUST respond with the same message types and HTTP status code as
-specified on the Success case.
+If the processing of the request is partially successful
+(i.e. when the server accepts only parts of the data and rejects the rest), the
+server MUST respond with `HTTP 200 OK`. The response body MUST be
+a Protobuf-encoded [Export*ServiceResponse](https://github.com/open-telemetry/opentelemetry-proto)
+message (`ExportTraceServiceResponse` for traces,
+`ExportMetricsServiceResponse` for metrics and
+`ExportLogsServiceResponse` for logs).
 
 Additionally, the server MUST initialize the `partial_success` field
 (`ExportTracePartialSuccess` message for traces,
@@ -464,7 +471,7 @@ the number of spans/data points/log records it accepted.
 
 The server MAY populate the `error_message` field with a human-readable
 error message in English. The protocol does not attempt to define the content
-nor structure of such error message, but it SHOULD generally offer guidance
+nor structure of such error message, but it should generally offer guidance
 on how users can address the issues.
 
 ##### Failures
