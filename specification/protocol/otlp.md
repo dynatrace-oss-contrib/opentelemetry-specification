@@ -158,10 +158,11 @@ The success response indicates telemetry data is successfully processed by the
 server. If the server receives an empty request (a request that does not carry
 any telemetry data) the server SHOULD respond with success.
 
-Success response is returned via
-[Export*ServiceResponse](https://github.com/open-telemetry/opentelemetry-proto)
-message (`ExportTraceServiceResponse` for traces, `ExportMetricsServiceResponse`
-for metrics, `ExportLogsServiceResponse` for logs).
+On success, the server response MUST be
+a Protobuf-encoded [Export*ServiceResponse](https://github.com/open-telemetry/opentelemetry-proto) message
+(`ExportTraceServiceResponse` for traces,
+`ExportMetricsServiceResponse` for metrics and
+`ExportLogsServiceResponse` for logs).
 
 The server SHOULD respond with success no sooner than after successfully
 decoding and validating the request.
@@ -184,8 +185,8 @@ the number of spans/data points/log records it accepted.
 
 The server MAY populate the `error_message` field with a human-readable
 error message in English. The protocol does not attempt to define the content
-of such error message, but it SHOULD generally offer guidance in how senders
-can address the issues.
+nor structure of such error message, but it SHOULD generally offer guidance
+on how users can address the issues.
 
 ##### Failures
 
@@ -435,10 +436,11 @@ The success response indicates telemetry data is successfully processed by the
 server. If the server receives an empty request (a request that does not carry
 any telemetry data) the server SHOULD respond with success.
 
-On success the server MUST respond with `HTTP 200 OK`. Response body MUST be
-a Protobuf-encoded `ExportTraceServiceResponse` message for traces,
-`ExportMetricsServiceResponse` message for metrics and
-`ExportLogsServiceResponse` message for logs.
+On success, the server MUST respond with `HTTP 200 OK`. The response body MUST be
+a Protobuf-encoded [Export*ServiceResponse](https://github.com/open-telemetry/opentelemetry-proto)
+message (`ExportTraceServiceResponse` for traces,
+`ExportMetricsServiceResponse` for metrics and
+`ExportLogsServiceResponse` for logs).
 
 The server SHOULD respond with success no sooner than after successfully
 decoding and validating the request.
