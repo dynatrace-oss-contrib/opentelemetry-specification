@@ -148,7 +148,7 @@ was not delivered.
 
 #### OTLP/gRPC Response
 
-Response MUST be the appropriate serialized Protobuf message (see below for
+The response MUST be the appropriate serialized Protobuf message (see below for
 the specific message to use in the [Success](#success),
 [Partial Success](#partial-success) and [Failure](#failures) cases).
 
@@ -416,7 +416,7 @@ numbers or strings are accepted when decoding.
 
 #### OTLP/HTTP Response
 
-Response body MUST be the appropriate serialized Protobuf message (see below for
+The response body MUST be the appropriate serialized Protobuf message (see below for
 the specific message to use in the [Success](#success-1),
 [Partial Success](#partial-success-1) and [Failure](#failures-1) cases).
 
