@@ -192,6 +192,9 @@ error message in English. The protocol does not attempt to define the content
 nor structure of such error message, but it should generally offer guidance
 on how users can address the issues.
 
+The client MUST NOT retry the request when it receives a partial success
+response where the `partial_success` is populated.
+
 ##### Failures
 
 When an error is returned by the server it falls into 2 broad categories:
@@ -474,6 +477,9 @@ error message in English. The protocol does not attempt to define the content
 nor structure of such error message, but it should generally offer guidance
 on how users can address the issues.
 
+The client MUST NOT retry the request when it receives a partial success
+response where the `partial_success` is populated.
+
 ##### Failures
 
 If the processing of the request fails the server MUST respond with appropriate
@@ -588,6 +594,23 @@ no way of knowing if recently sent data was delivered if no acknowledgement was
 received yet. The client will typically choose to re-send such data to guarantee
 delivery, which may result in duplicate data on the server side. This is a
 deliberate choice and is considered to be the right tradeoff for telemetry data.
+
+#### Partial success retry
+
+Each server has its particularities and its way of treating data. There
+could be many reasons why a given server only accepted parts of a
+OTLP request (e.g. quota exceeded,
+data not conforming with the server's standards, etc).
+
+The protocol offers a basic way of communicating partial reception success
+from the server to the client. Such partial success information contains 
+how many spans/data points/log records were accepted and a general error
+message. With only such information it is not feasible to achieve any type
+of automatic retry by clients. 
+
+The protocol does not give guidance on how such partial success requests can be
+retried by clients. Attempting to do so would complicate the protocol and
+implementations significantly and is left out as a possible future area of work.
 
 ## Future Versions and Interoperability
 
