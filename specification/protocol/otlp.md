@@ -39,6 +39,7 @@ nodes such as collectors and telemetry backends.
 - [Known Limitations](#known-limitations)
   * [Request Acknowledgements](#request-acknowledgements)
     + [Duplicate Data](#duplicate-data)
+    + [Partial success retry](#partial-success-retry)
 - [Future Versions and Interoperability](#future-versions-and-interoperability)
 - [Glossary](#glossary)
 - [References](#references)
