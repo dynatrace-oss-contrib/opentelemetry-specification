@@ -155,12 +155,18 @@ the specific message to use in the [Success](#success),
 ##### Success
 
 The success response indicates telemetry data is successfully processed by the
-server. If the server receives an empty request (a request that does not carry
+server.
+
+The success response may also be used when telemetry data processing is done
+at a later point by the server. In such cases, the server may want to return
+immediately in order to keep a low-latency communication with clients.
+
+If the server receives an empty request (a request that does not carry
 any telemetry data) the server SHOULD respond with success.
 
-On success, the server response MUST be
-a Protobuf-encoded [Export*ServiceResponse](https://github.com/open-telemetry/opentelemetry-proto) message
-(`ExportTraceServiceResponse` for traces,
+On success, the server response MUST be a Protobuf-encoded
+[Export*ServiceResponse](https://github.com/open-telemetry/opentelemetry-proto)
+message (`ExportTraceServiceResponse` for traces,
 `ExportMetricsServiceResponse` for metrics and
 `ExportLogsServiceResponse` for logs).
 
@@ -174,9 +180,9 @@ in case of a successful response.
 
 If the processing of the request is partially successful
 (i.e. when the server accepts only parts of the data and rejects the rest), the
-server response MUST be a
-Protobuf-encoded [Export*ServiceResponse](https://github.com/open-telemetry/opentelemetry-proto) message
-(`ExportTraceServiceResponse` for traces,
+server response MUST be a Protobuf-encoded
+[Export*ServiceResponse](https://github.com/open-telemetry/opentelemetry-proto)
+message (`ExportTraceServiceResponse` for traces,
 `ExportMetricsServiceResponse` for metrics and
 `ExportLogsServiceResponse` for logs).
 
@@ -188,9 +194,10 @@ Additionally, the server MUST initialize the `partial_success` field
 the number of spans/data points/log records it accepted.
 
 The server MAY populate the `error_message` field with a human-readable
-error message in English. The protocol does not attempt to define the content
-nor structure of such error message, but it should generally offer guidance
-on how users can address the issues.
+error message in English. The message should generally explain why the
+server rejected parts of the data, and should offer guidance on how users
+can address the issues. The protocol does not attempt to define the content
+or structure of such error message.
 
 The client MUST NOT retry the request when it receives a partial success
 response where the `partial_success` is populated.
@@ -440,7 +447,13 @@ header.
 ##### Success
 
 The success response indicates telemetry data is successfully processed by the
-server. If the server receives an empty request (a request that does not carry
+server.
+
+The success response may also be used when telemetry data processing is done
+at a later point by the server. In such cases, the server may want to return
+immediately in order to keep a low-latency communication with clients.
+
+If the server receives an empty request (a request that does not carry
 any telemetry data) the server SHOULD respond with success.
 
 On success, the server MUST respond with `HTTP 200 OK`. The response body MUST be
@@ -473,9 +486,10 @@ Additionally, the server MUST initialize the `partial_success` field
 the number of spans/data points/log records it accepted.
 
 The server MAY populate the `error_message` field with a human-readable
-error message in English. The protocol does not attempt to define the content
-nor structure of such error message, but it should generally offer guidance
-on how users can address the issues.
+error message in English. The message should generally explain why the
+server rejected parts of the data, and should offer guidance on how users
+can address the issues. The protocol does not attempt to define the content
+or structure of such error message.
 
 The client MUST NOT retry the request when it receives a partial success
 response where the `partial_success` is populated.
