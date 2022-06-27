@@ -158,8 +158,8 @@ The success response indicates telemetry data is successfully processed by the
 server.
 
 The success response may also be used when telemetry data processing is done
-at a later point by the server. In such cases, the server may want to return
-immediately in order to keep a low-latency communication with clients.
+at a later point. In such cases, the server may want to return
+immediately to ensure low-latency communication with clients.
 
 If the server receives an empty request (a request that does not carry
 any telemetry data) the server SHOULD respond with success.
@@ -194,10 +194,10 @@ Additionally, the server MUST initialize the `partial_success` field
 the number of spans/data points/log records it accepted.
 
 The server MAY populate the `error_message` field with a human-readable
-error message in English. The message should generally explain why the
+error message in English. The message should explain why the
 server rejected parts of the data, and should offer guidance on how users
-can address the issues. The protocol does not attempt to define the content
-or structure of such error message.
+can address the issues.
+The protocol does not attempt to define the structure of such an error message.
 
 The client MUST NOT retry the request when it receives a partial success
 response where the `partial_success` is populated.
@@ -450,8 +450,8 @@ The success response indicates telemetry data is successfully processed by the
 server.
 
 The success response may also be used when telemetry data processing is done
-at a later point by the server. In such cases, the server may want to return
-immediately in order to keep a low-latency communication with clients.
+at a later point. In such cases, the server may want to return
+immediately to ensure low-latency communication with clients.
 
 If the server receives an empty request (a request that does not carry
 any telemetry data) the server SHOULD respond with success.
@@ -486,10 +486,10 @@ Additionally, the server MUST initialize the `partial_success` field
 the number of spans/data points/log records it accepted.
 
 The server MAY populate the `error_message` field with a human-readable
-error message in English. The message should generally explain why the
+error message in English. The message should explain why the
 server rejected parts of the data, and should offer guidance on how users
-can address the issues. The protocol does not attempt to define the content
-or structure of such error message.
+can address the issues.
+The protocol does not attempt to define the structure of such an error message.
 
 The client MUST NOT retry the request when it receives a partial success
 response where the `partial_success` is populated.
@@ -617,10 +617,10 @@ OTLP request (e.g. quota exceeded,
 data not conforming with the server's standards, etc).
 
 The protocol offers a basic way of communicating partial reception success
-from the server to the client. Such partial success information contains 
+from the server to the client. Such partial success information contains
 how many spans/data points/log records were accepted and a general error
 message. With only such information it is not feasible to achieve any type
-of automatic retry by clients. 
+of automatic retry by clients.
 
 The protocol does not give guidance on how such partial success requests can be
 retried by clients. Attempting to do so would complicate the protocol and
