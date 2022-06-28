@@ -196,9 +196,9 @@ the number of spans/data points/log records it accepted.
 
 The server MAY populate the `error_message` field with a human-readable
 error message in English. The message should explain why the
-server rejected parts of the data, and should offer guidance on how users
+server rejected parts of the data, and might offer guidance on how users
 can address the issues.
-The protocol does not attempt to define the structure of such an error message.
+The protocol does not attempt to define the structure of the error message.
 
 The client MUST NOT retry the request when it receives a partial success
 response where the `partial_success` is populated.
@@ -488,9 +488,9 @@ the number of spans/data points/log records it accepted.
 
 The server MAY populate the `error_message` field with a human-readable
 error message in English. The message should explain why the
-server rejected parts of the data, and should offer guidance on how users
+server rejected parts of the data, and might offer guidance on how users
 can address the issues.
-The protocol does not attempt to define the structure of such an error message.
+The protocol does not attempt to define the structure of the error message.
 
 The client MUST NOT retry the request when it receives a partial success
 response where the `partial_success` is populated.
@@ -613,7 +613,7 @@ deliberate choice and is considered to be the right tradeoff for telemetry data.
 #### Partial success retry
 
 Each server has its particularities and its way of treating data. There
-could be many reasons why a given server only accepted parts of a
+can be many reasons why a given server only accepted parts of a
 OTLP request (e.g. quota exceeded,
 data not conforming with the server's standards, etc).
 
