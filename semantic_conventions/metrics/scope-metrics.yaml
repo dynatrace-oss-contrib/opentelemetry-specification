@@ -1,0 +1,12 @@
+groups:
+  - id: scope_metrics
+    prefix: scope_metrics
+    brief: >
+       Scope metric attributes
+    attributes:
+      - id: my_metric_attribute
+        type: string
+        requirement_level: recommended
+        brief: >
+         Some metric specific scope attribute
+        examples: ['my_meter']
