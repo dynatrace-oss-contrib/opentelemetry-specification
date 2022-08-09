@@ -1,15 +1,41 @@
 # Attribute Precedence on transformation to non-OTLP formats
 
-This document defines the attribute precedence that exporters should follow when 
-translating from the hierarchical OTLP format to non-hierarchical formats.
+<details>
+<summary>Table of Contents</summary>
 
-This mapping is required when flattening out attributes from the structured OTLP
-format that allows adding attributes at different levels (e.g., Resource 
-attributes, InstrumentationLibraryScope attributes, Attributes on 
-Spans/Metrics/Logs) to a non-hierarchical representation (e.g., OpenMetrics 
-labels).
+<!-- toc -->
+
+- [Attribute Precedence on transformation to non-OTLP formats](#attribute-precedence-on-transformation-to-non-otlp-formats)
+  - [Overview](#overview)
+  - [Attribute hierarchy in the OTLP message](#attribute-hierarchy-in-the-otlp-message)
+  - [Precedence per Signal](#precedence-per-signal)
+    - [Traces](#traces)
+      - [Span Events](#span-events)
+      - [Span links](#span-links)
+    - [Metrics](#metrics)
+      - [Metric exemplars](#metric-exemplars)
+    - [Logs](#logs)
+  - [Considerations](#considerations)
+  - [Example](#example)
+  - [Useful links](#useful-links)
+
+<!-- tocstop -->
+
+</details>
+
+## Overview
+
+This document provides supplementary guidelines for the attribute precedence 
+that exporters should follow when translating from the hierarchical OTLP format
+to non-hierarchical formats.
+
+A mapping is required when flattening out attributes from the structured OTLP
+format has attributes at different levels (e.g., Resource attributes, 
+InstrumentationLibraryScope attributes, Attributes on Spans/Metrics/Logs) to a
+non-hierarchical representation (e.g., OpenMetrics labels).
 In the case of OpenMetrics, the set of labels is completely flat and must have 
-unique labels only (https://github.com/OpenObservability/OpenMetrics/blob/main/specification/OpenMetrics.md#labelset).
+unique labels only 
+(https://github.com/OpenObservability/OpenMetrics/blob/main/specification/OpenMetrics.md#labelset).
 Since OpenTelemetry allows for different levels of attributes, it is feasible
 that the same attribute appears multiple times on different levels.
 
@@ -20,9 +46,11 @@ OpenTelemetry attributes to flat sets.
 
 Since the OTLP format is a hierarchical format, there is an inherent order in 
 the attributes.
-This document assumes that Resource attributes are at the top of the hierarchy, 
-since they are the most general attributes. 
-Attributes on individual Spans/Metric data points/Logs are at the bottom of the
+In this document, 
+[Resource](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/resource/sdk.md)
+attributes are considered to be at the top of the hierarchy, since they are the
+most general attributes. 
+Attributes on individual Spans/ Metric data points/Logs are at the bottom of the
 hierarchy, as they are most specialized and only apply to a subset of all data.
 
 **A more specialized attribute that shares an attribute key with more general 
@@ -32,17 +60,19 @@ Therefore, more specialized attributes will overwrite more general ones.
 In some cases it might be desirable to overwrite an attribute like this.
 <!-- TODO example -->
 
-When de-normalizing the structured OTLP message to a flat set of key-value pairs,
-attributes that are present at Resource and InstrumentationLibraryScope level
-will be duplicated for each Span/Metric data point/Log.
+When de-normalizing the structured OTLP message to a flat set of key-value 
+pairs, attributes that are present at Resource and InstrumentationLibraryScope 
+level will be duplicated for each Span/Metric data point/Log.
 
 ## Precedence per Signal
 
 Below, the precedence for each of the signals is spelled out explicitly.
 Some attributes (e.g., Span Link attributes) should only be used when flattening
 out attributes to transform the respective concept (Span Link attributes should
-not be added when transforming attributes to export spans, for example).
-`A > B` means that `A` will overwrite `B` if the keys clash.
+not be added when transforming attributes on spans, for example).
+
+`A > B` denotes that the attribute on `A` will overwrite the attribute on  `B`
+if the keys clash.
 
 ### Traces
 
@@ -88,12 +118,13 @@ LogRecord.log_records.attributes > ScopeLogs.scope.attributes > ResourceLogs.res
 ## Considerations
 
 Note that this precedence is a strong suggestion, not a requirement.
-Exporters should follow this mode of flattening, but might diverge if they have
-a reason to do so. 
+Code that transforms attributes should follow this mode of flattening, but might 
+diverge if they have a reason to do so. 
 Furthermore, exporters can apply clash prevention, e.g., by prefixing all 
 Resource attributes with `resource.`.
-Note that even then, a Span attribute can overwrite the resource attribute 
-`attribute_name`, if it is called `resource.attribute_name`.
+Note that even then, a Span/Metric data point/LogRecord attribute can overwrite
+the resource attribute `attribute_name`, if it is called 
+`resource.attribute_name`.
 Therefore, extra care needs to be taken when prefixing attributes.
 
 ## Example
@@ -157,6 +188,10 @@ attribute2: scope-attribute-2
 attribute3: resource-attribute-3
 ```
 
+## Useful links
 
-<!-- TODO Links -->
+* [Trace Proto](https://github.com/open-telemetry/opentelemetry-proto/blob/main/opentelemetry/proto/trace/v1/trace.proto)
+* [Metrics Proto](https://github.com/open-telemetry/opentelemetry-proto/blob/main/opentelemetry/proto/metrics/v1/metrics.proto)
+* [Logs Proto](https://github.com/open-telemetry/opentelemetry-proto/blob/main/opentelemetry/proto/logs/v1/logs.proto)
+* [Resource Proto](https://github.com/open-telemetry/opentelemetry-proto/blob/main/opentelemetry/proto/resource/v1/resource.proto)
 
