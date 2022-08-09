@@ -1,5 +1,7 @@
 # Attribute Precedence on transformation to non-OTLP formats
 
+**Status**: [Experimental](../document-status.md)
+
 <details>
 <summary>Table of Contents</summary>
 
