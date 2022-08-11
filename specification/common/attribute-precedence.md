@@ -7,19 +7,18 @@
 
 <!-- toc -->
 
-- [Attribute Precedence on transformation to non-OTLP formats](#attribute-precedence-on-transformation-to-non-otlp-formats)
-  - [Overview](#overview)
-  - [Attribute hierarchy in the OTLP message](#attribute-hierarchy-in-the-otlp-message)
-  - [Precedence per Signal](#precedence-per-signal)
-    - [Traces](#traces)
-      - [Span Events](#span-events)
-      - [Span links](#span-links)
-    - [Metrics](#metrics)
-      - [Metric exemplars](#metric-exemplars)
-    - [Logs](#logs)
-  - [Considerations](#considerations)
-  - [Example](#example)
-  - [Useful links](#useful-links)
+- [Overview](#overview)
+- [Attribute hierarchy in the OTLP message](#attribute-hierarchy-in-the-otlp-message)
+- [Precedence per Signal](#precedence-per-signal)
+  - [Traces](#traces)
+    - [Span Events](#span-events)
+    - [Span links](#span-links)
+  - [Metrics](#metrics)
+    - [Metric exemplars](#metric-exemplars)
+  - [Logs](#logs)
+- [Considerations](#considerations)
+- [Example](#example)
+- [Useful links](#useful-links)
 
 <!-- tocstop -->
 
@@ -32,8 +31,8 @@ that exporters should follow when translating from the hierarchical OTLP format
 to non-hierarchical formats.
 
 A mapping is required when flattening out attributes from the structured OTLP
-format has attributes at different levels (e.g., Resource attributes, 
-InstrumentationLibraryScope attributes, Attributes on Spans/Metrics/Logs) to a
+format, which has attributes at different levels (e.g., Resource attributes, 
+InstrumentationScope attributes, attributes on Spans/Metrics/Logs) to a
 non-hierarchical representation (e.g., OpenMetrics labels).
 In the case of OpenMetrics, the set of labels is completely flat and must have 
 unique labels only 
@@ -41,10 +40,10 @@ unique labels only
 Since OpenTelemetry allows for different levels of attributes, it is feasible
 that the same attribute appears multiple times on different levels.
 
-This document aims to provide guidance around consistently transforming 
-OpenTelemetry attributes to flat sets.
+This document aims to provide guidance on how OpenTelemetry attributes can be 
+consistently mapped to flat sets.
 
-## Attribute hierarchy in the OTLP message
+## Attribute hierarchy in OTLP messages
 
 Since the OTLP format is a hierarchical format, there is an inherent order in 
 the attributes.
@@ -52,19 +51,18 @@ In this document,
 [Resource](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/resource/sdk.md)
 attributes are considered to be at the top of the hierarchy, since they are the
 most general attributes. 
-Attributes on individual Spans/ Metric data points/Logs are at the bottom of the
+Attributes on individual Spans/Metric data points/Logs are at the bottom of the
 hierarchy, as they are most specialized and only apply to a subset of all data.
 
 **A more specialized attribute that shares an attribute key with more general 
 attribute will take precedence.** 
 
-Therefore, more specialized attributes will overwrite more general ones.
 In some cases it might be desirable to overwrite an attribute like this.
 <!-- TODO example -->
 
-When de-normalizing the structured OTLP message to a flat set of key-value 
-pairs, attributes that are present at Resource and InstrumentationLibraryScope 
-level will be duplicated for each Span/Metric data point/Log.
+When de-normalizing an OTLP message to a flat set of key-value pairs,
+attributes that are present on the Resource and InstrumentationScope levels will
+be duplicated for each Span/Metric data point/Log.
 
 ## Precedence per Signal
 
@@ -122,25 +120,11 @@ LogRecord.log_records.attributes > ScopeLogs.scope.attributes > ResourceLogs.res
 Note that this precedence is a strong suggestion, not a requirement.
 Code that transforms attributes should follow this mode of flattening, but might 
 diverge if they have a reason to do so. 
-Furthermore, exporters can apply clash prevention, e.g., by prefixing all 
-Resource attributes with `resource.`.
-Note that even then, a Span/Metric data point/LogRecord attribute can overwrite
-the resource attribute `attribute_name`, if it is called 
-`resource.attribute_name`.
-Therefore, extra care needs to be taken when prefixing attributes.
 
 ## Example
 
-De-duplication can be thought of as a map with unique keys to which the 
-attributes are added, from most general to most specialized.
-First, the resource attributes are added, then the InstrumentationLibraryScope 
-attributes, which overwrite the resource attributes if they share a key.
-Then the attributes on the Span/Metric data point/LogRecord are added, which
-again overwrite keys that are already present.
-The final set of key-value pairs are all the pairs in the map.
-
-This YAML-like representation of a theoretical OTLP message has attributes
-with attribute names that clash on multiple levels.
+The following is a theoretical YAML-like representation of an OTLP message which
+has attributes with attribute names that clash on multiple levels.
 
 ```yaml
 ResourceMetrics:
@@ -163,13 +147,15 @@ ResourceMetrics:
             data/0:
                 data_points:
                     # each data can have multiple data points:
-                    data_point/0:
-                        attributes: 
-                            attribute1: data-point-0-attribute-1
-
                     data_point/1:
                         attributes: 
+                            # will overwrite scope and resource attribute
                             attribute1: data-point-1-attribute-1
+
+                    data_point/2:
+                        attributes:
+                            # will overwrite 
+                            attribute1: data-point-2-attribute-1
 ```
 
 The structure above contains two data points, thus there will be two data points
@@ -177,17 +163,17 @@ in the output.
 Their attributes will be:
 
 ```yaml
-# data point 0
-service.name: my-service
-attribute1: data-point-0-attribute-1     # only this attribute is different
-attribute2: scope-attribute-2
-attribute3: resource-attribute-3
-
 # data point 1
-service.name: my-service
-attribute1: data-point-1-attribute-1     # only this attribute is different
-attribute2: scope-attribute-2
-attribute3: resource-attribute-3
+service.name: my-service              # from the resource
+attribute1: data-point-1-attribute-1  # overwrites attribute1 on resource & scope
+attribute2: scope-attribute-2         # overwrites attribute2 on resource
+attribute3: resource-attribute-3      # from the resource, not overwritten
+
+# data point 2
+service.name: my-service              # from the resource
+attribute1: data-point-2-attribute-1  # overwrites attribute1 on resource & scope
+attribute2: scope-attribute-2         # overwrites attribute2 on resource
+attribute3: resource-attribute-3      # from the resource, not overwritten
 ```
 
 ## Useful links

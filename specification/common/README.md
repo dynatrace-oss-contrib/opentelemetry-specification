@@ -10,12 +10,11 @@ aliases: [/docs/reference/specification/common/common]
 
 <!-- toc -->
 
-- [Common specification concepts](#common-specification-concepts)
-  - [Attribute](#attribute)
-    - [Attribute Limits](#attribute-limits)
-      - [Configurable Parameters](#configurable-parameters)
-      - [Exempt Entities](#exempt-entities)
-  - [Attribute Collections](#attribute-collections)
+- [Attribute](#attribute)
+  * [Attribute Limits](#attribute-limits)
+    + [Configurable Parameters](#configurable-parameters)
+    + [Exempt Entities](#exempt-entities)
+- [Attribute Collections](#attribute-collections)
 
 <!-- tocstop -->
 
@@ -60,9 +59,9 @@ See [Requirement Level](attribute-requirement-level.md) for requirement levels g
 See [this document](attribute-type-mapping.md) to find out how to map values obtained
 outside OpenTelemetry into OpenTelemetry attribute values.
 
-See [the document on attribute precedence](attribute-precedence.md) to find out
-how to transform a structured representation like OTLP to a flat set of unique 
-attributes.
+See [Attribute precedence for non-OTLP exporters](attribute-precedence.md) to 
+find out how to transform a structured representation like OTLP to a flat set of
+unique attributes.
 
 ### Attribute Limits
 
