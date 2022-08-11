@@ -67,9 +67,17 @@ be duplicated for each Span/Metric data point/Log.
 ## Precedence per Signal
 
 Below, the precedence for each of the signals is spelled out explicitly.
-Some attributes (e.g., Span Link attributes) should only be used when flattening
-out attributes to transform the respective concept (Span Link attributes should
-not be added when transforming attributes on spans, for example).
+Only Spans, Metric data points and LogRecords are considered.
+Span Links, Span Events and Metric Exemplars need to be considered differently, 
+as conflicting entries there can lead to problematic data loss.
+Consider a `http.host` attribute on a Span Link, which identifies the host of a
+linked Span.
+Following the "more specialized overwrites more general" suggestion leads to 
+overwriting the `http.host` attribute of the Span, which is likely desired 
+information.
+Consider transferring attributes on Span Links, Span Events and Metric Exemplars
+separately from the parent Span/Metric data point.
+
 
 `A > B` denotes that the attribute on `A` will overwrite the attribute on  `B`
 if the keys clash.
@@ -78,18 +86,6 @@ if the keys clash.
 
 ```
 Span.attributes > ScopeSpans.scope.attributes > ResourceSpans.resource.attributes
-```
-
-#### Span Events
-
-```
-Span.events.attributes > Span.attributes > ScopeSpans.scope.attributes > ResourceSpans.resource.attributes
-```
-
-#### Span links
-
-```
-Span.links.attributes > Span.attributes > ScopeSpans.scope.attributes > ResourceSpans.resource.attributes
 ```
 
 ### Metrics
@@ -101,12 +97,6 @@ independently.
 
 ```
 Metric.data.data_points.attributes > ScopeMetrics.scope.attributes > ResourceMetrics.resource.attributes
-```
-
-#### Metric exemplars
-
-```
-Metric.data.data_points.exemplars.filtered_attributes > Metric.data.data_points.attributes > ScopeMetrics.scope.attributes > ResourceMetrics.resource.attributes
 ```
 
 ### Logs
