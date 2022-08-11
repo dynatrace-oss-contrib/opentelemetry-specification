@@ -54,15 +54,12 @@ most general attributes.
 Attributes on individual Spans/Metric data points/Logs are at the bottom of the
 hierarchy, as they are most specialized and only apply to a subset of all data.
 
-**A more specialized attribute that shares an attribute key with more general 
-attribute will take precedence.** 
+**A more specialized attribute that shares an attribute key with more general
+attribute will take precedence and overwrite the more general attribute.**
 
-In some cases it might be desirable to overwrite an attribute like this.
-<!-- TODO example -->
-
-When de-normalizing an OTLP message to a flat set of key-value pairs,
+When de-normalizing an OTLP message into a flat set of key-value pairs,
 attributes that are present on the Resource and InstrumentationScope levels will
-be duplicated for each Span/Metric data point/Log.
+be attached to each Span/Metric data point/Log.
 
 ## Precedence per Signal
 
@@ -78,8 +75,7 @@ information.
 Consider transferring attributes on Span Links, Span Events and Metric Exemplars
 separately from the parent Span/Metric data point.
 
-
-`A > B` denotes that the attribute on `A` will overwrite the attribute on  `B`
+`A > B` denotes that the attribute on `A` will overwrite the attribute on `B`
 if the keys clash.
 
 ### Traces
@@ -108,7 +104,7 @@ LogRecord.log_records.attributes > ScopeLogs.scope.attributes > ResourceLogs.res
 ## Considerations
 
 Note that this precedence is a strong suggestion, not a requirement.
-Code that transforms attributes should follow this mode of flattening, but might 
+Code that transforms attributes should follow this mode of flattening, but may 
 diverge if they have a reason to do so. 
 
 ## Example
