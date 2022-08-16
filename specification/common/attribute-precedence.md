@@ -64,7 +64,7 @@ be attached to each Span/Metric data point/Log.
 ## Precedence per Signal
 
 Below, the precedence for each of the signals is spelled out explicitly.
-Only Spans, Metric data points and LogRecords are considered.
+Only spans, metric data points and log records are considered.
 Span Links, Span Events and Metric Exemplars need to be considered differently, 
 as conflicting entries there can lead to problematic data loss.
 Consider a `http.host` attribute on a Span Link, which identifies the host of a
