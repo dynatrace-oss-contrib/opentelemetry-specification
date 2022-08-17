@@ -1,4 +1,4 @@
-# Attribute Precedence on transformation to non-OTLP formats
+# Attribute precedence on transformation to non-OTLP formats
 
 **Status**: [Experimental](../document-status.md)
 
@@ -8,14 +8,12 @@
 <!-- toc -->
 
 - [Overview](#overview)
-- [Attribute hierarchy in the OTLP message](#attribute-hierarchy-in-the-otlp-message)
+- [Attribute hierarchy in OTLP messages](#attribute-hierarchy-in-otlp-messages)
 - [Precedence per Signal](#precedence-per-signal)
   - [Traces](#traces)
-    - [Span Events](#span-events)
-    - [Span links](#span-links)
   - [Metrics](#metrics)
-    - [Metric exemplars](#metric-exemplars)
   - [Logs](#logs)
+  - [Span Links, Span Events and Metric Exemplars](#span-links-span-events-and-metric-exemplars)
 - [Considerations](#considerations)
 - [Example](#example)
 - [Useful links](#useful-links)
@@ -65,15 +63,6 @@ be attached to each Span/Metric data point/Log.
 
 Below, the precedence for each of the signals is spelled out explicitly.
 Only spans, metric data points and log records are considered.
-Span Links, Span Events and Metric Exemplars need to be considered differently, 
-as conflicting entries there can lead to problematic data loss.
-Consider a `http.host` attribute on a Span Link, which identifies the host of a
-linked Span.
-Following the "more specialized overwrites more general" suggestion leads to 
-overwriting the `http.host` attribute of the Span, which is likely desired 
-information.
-Consider transferring attributes on Span Links, Span Events and Metric Exemplars
-separately from the parent Span/Metric data point.
 
 `A > B` denotes that the attribute on `A` will overwrite the attribute on `B`
 if the keys clash.
@@ -101,6 +90,19 @@ Metric.data.data_points.attributes > ScopeMetrics.scope.attributes > ResourceMet
 LogRecord.log_records.attributes > ScopeLogs.scope.attributes > ResourceLogs.resource.attributes
 ```
 
+### Span Links, Span Events and Metric Exemplars
+
+> Span Links, Span Events and Metric Exemplars need to be considered
+> differently, as conflicting entries there can lead to problematic data loss.
+
+Consider a `http.host` attribute on a Span Link, which identifies the host of a
+linked Span.
+Following the "more specialized overwrites more general" suggestion leads to
+overwriting the `http.host` attribute of the Span, which is likely desired
+information.
+Transferring attributes on Span Links, Span Events and Metric Exemplars should
+be done separately from the parent Span/Metric data point.
+
 ## Considerations
 
 Note that this precedence is a strong suggestion, not a requirement.
@@ -127,6 +129,7 @@ ResourceMetrics:
             attributes:
                 attribute1: scope-attribute-1
                 attribute2: scope-attribute-2
+                attribute4: scope-attribute-4
         
         metrics:
             # there can be multiple data entries here.
@@ -142,6 +145,7 @@ ResourceMetrics:
                         attributes:
                             # will overwrite 
                             attribute1: data-point-2-attribute-1
+                            attribute4: data-point-2-attribute-4
 ```
 
 The structure above contains two data points, thus there will be two data points
@@ -154,12 +158,14 @@ service.name: my-service              # from the resource
 attribute1: data-point-1-attribute-1  # overwrites attribute1 on resource & scope
 attribute2: scope-attribute-2         # overwrites attribute2 on resource
 attribute3: resource-attribute-3      # from the resource, not overwritten
+attribute4: scope-attribute-4         # from the scope, not overwritten
 
 # data point 2
 service.name: my-service              # from the resource
 attribute1: data-point-2-attribute-1  # overwrites attribute1 on resource & scope
 attribute2: scope-attribute-2         # overwrites attribute2 on resource
 attribute3: resource-attribute-3      # from the resource, not overwritten
+attribute4: data-point-2-attribute-4  # overwrites attribute4 from the scope
 ```
 
 ## Useful links
