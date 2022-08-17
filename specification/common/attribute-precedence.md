@@ -31,11 +31,11 @@ to non-hierarchical formats.
 A mapping is required when flattening out attributes from the structured OTLP
 format, which has attributes at different levels (e.g., Resource attributes,
 InstrumentationScope attributes, attributes on Spans/Metrics/Logs) to a
-non-hierarchical representation (e.g., OpenMetrics labels).
-In the case of OpenMetrics, the set of labels is completely flat and must have
-unique labels only
+non-hierarchical representation (e.g., Prometheus/OpenMetrics labels).
+In the case of OpenMetrics, the set of labels is flat and must have unique
+labels only
 (<https://github.com/OpenObservability/OpenMetrics/blob/main/specification/OpenMetrics.md#labelset>).
-Since OpenTelemetry allows for different levels of attributes, it is feasible
+Since OpenTelemetry allows for different levels of attributes, it is possible
 that the same attribute appears multiple times on different levels.
 
 This document aims to provide guidance on how OpenTelemetry attributes can be
@@ -47,8 +47,8 @@ Since the OTLP format is a hierarchical format, there is an inherent order in
 the attributes.
 In this document,
 [Resource](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/resource/sdk.md)
-attributes are considered to be at the top of the hierarchy, since they are the
-most general attributes.
+attributes are considered to be at the top of the hierarchy, since they apply to
+all collected telemetry.
 Attributes on individual Spans/Metric data points/Logs are at the bottom of the
 hierarchy, as they are most specialized and only apply to a subset of all data.
 
@@ -102,6 +102,7 @@ overwriting the `http.host` attribute of the Span, which is likely desired
 information.
 Transferring attributes on Span Links, Span Events and Metric Exemplars should
 be done separately from the parent Span/Metric data point.
+This is out of the scope of these guidelines.
 
 ## Considerations
 
