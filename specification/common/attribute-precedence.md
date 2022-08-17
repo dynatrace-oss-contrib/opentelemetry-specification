@@ -10,10 +10,10 @@
 - [Overview](#overview)
 - [Attribute hierarchy in OTLP messages](#attribute-hierarchy-in-otlp-messages)
 - [Precedence per Signal](#precedence-per-signal)
-  - [Traces](#traces)
-  - [Metrics](#metrics)
-  - [Logs](#logs)
-  - [Span Links, Span Events and Metric Exemplars](#span-links-span-events-and-metric-exemplars)
+  * [Traces](#traces)
+  * [Metrics](#metrics)
+  * [Logs](#logs)
+  * [Span Links, Span Events and Metric Exemplars](#span-links-span-events-and-metric-exemplars)
 - [Considerations](#considerations)
 - [Example](#example)
 - [Useful links](#useful-links)
@@ -24,31 +24,31 @@
 
 ## Overview
 
-This document provides supplementary guidelines for the attribute precedence 
+This document provides supplementary guidelines for the attribute precedence
 that exporters should follow when translating from the hierarchical OTLP format
 to non-hierarchical formats.
 
 A mapping is required when flattening out attributes from the structured OTLP
-format, which has attributes at different levels (e.g., Resource attributes, 
+format, which has attributes at different levels (e.g., Resource attributes,
 InstrumentationScope attributes, attributes on Spans/Metrics/Logs) to a
 non-hierarchical representation (e.g., OpenMetrics labels).
-In the case of OpenMetrics, the set of labels is completely flat and must have 
-unique labels only 
-(https://github.com/OpenObservability/OpenMetrics/blob/main/specification/OpenMetrics.md#labelset).
+In the case of OpenMetrics, the set of labels is completely flat and must have
+unique labels only
+(<https://github.com/OpenObservability/OpenMetrics/blob/main/specification/OpenMetrics.md#labelset>).
 Since OpenTelemetry allows for different levels of attributes, it is feasible
 that the same attribute appears multiple times on different levels.
 
-This document aims to provide guidance on how OpenTelemetry attributes can be 
+This document aims to provide guidance on how OpenTelemetry attributes can be
 consistently mapped to flat sets.
 
 ## Attribute hierarchy in OTLP messages
 
-Since the OTLP format is a hierarchical format, there is an inherent order in 
+Since the OTLP format is a hierarchical format, there is an inherent order in
 the attributes.
-In this document, 
+In this document,
 [Resource](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/resource/sdk.md)
 attributes are considered to be at the top of the hierarchy, since they are the
-most general attributes. 
+most general attributes.
 Attributes on individual Spans/Metric data points/Logs are at the bottom of the
 hierarchy, as they are most specialized and only apply to a subset of all data.
 
@@ -77,7 +77,7 @@ Span.attributes > ScopeSpans.scope.attributes > ResourceSpans.resource.attribute
 
 Metrics are different from Spans and LogRecords, as each Metric has a data field
 which can contain one or more data points.
-Each data point has a set of attributes, which need to be considered 
+Each data point has a set of attributes, which need to be considered
 independently.
 
 ```
@@ -106,8 +106,8 @@ be done separately from the parent Span/Metric data point.
 ## Considerations
 
 Note that this precedence is a strong suggestion, not a requirement.
-Code that transforms attributes should follow this mode of flattening, but may 
-diverge if they have a reason to do so. 
+Code that transforms attributes should follow this mode of flattening, but may
+diverge if they have a reason to do so.
 
 ## Example
 
@@ -174,4 +174,3 @@ attribute4: data-point-2-attribute-4  # overwrites attribute4 from the scope
 * [Metrics Proto](https://github.com/open-telemetry/opentelemetry-proto/blob/main/opentelemetry/proto/metrics/v1/metrics.proto)
 * [Logs Proto](https://github.com/open-telemetry/opentelemetry-proto/blob/main/opentelemetry/proto/logs/v1/logs.proto)
 * [Resource Proto](https://github.com/open-telemetry/opentelemetry-proto/blob/main/opentelemetry/proto/resource/v1/resource.proto)
-
