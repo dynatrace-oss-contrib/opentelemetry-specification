@@ -88,9 +88,10 @@ when it is propagated from the producer to the consumer(s). To be able to correl
 consumer traces with producer traces using the existing context propagation mechanisms,
 all components must propagate context down the chain.
 
-This imposes a requirement that all components are instrumented
-and propagate context according to OpenTelemetry requirements. In reality,
-this cannot be assumed, and in many cases is not even desired or possible.
+Due to the complex nature of messaging systems, it cannot be assumed
+that all components are instrumented and propagate context accordingly.
+For example, an application using a messaging system offered via
+software as a service (SaaS) that does not propagate context will lead to incomplete traces.
 
 To be able to correlate consumer traces with producer traces without requiring
 intermediary instrumentation, the context needs to be propagated on a
