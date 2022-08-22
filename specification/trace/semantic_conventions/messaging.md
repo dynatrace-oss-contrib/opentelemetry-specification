@@ -82,7 +82,7 @@ Given these definitions, the remainder of this section describes the semantic co
 
 ### Context propagation
 
-A message may pass many different components and layers in one or more intermediaries
+A message may traverse many different components and layers in one or more intermediaries
 when it is propagated from the producer to the consumer(s). To be able to correlate
 consumer traces with producer traces using the existing context propagation mechanisms,
 all components must propagate context down the chain.
@@ -95,10 +95,10 @@ To be able to correlate consumer traces with producer traces without requiring
 intermediary instrumentation, the context needs to be propagated on a
 *per-message* basis instead of on a *per-request* basis. This allows all components
 to have access to the same per-message context information, making it possible
-to correlate all the stages involved in processing a message with the message's
+to correlate all stages involved in processing a message with the message's
 creation.
 
-A message *creation context* allows correlating producer with consumer(s)
+A message *creation context* allows correlating producers with consumers
 of a message and model the dependencies between them,
 regardless of the underlying messaging transport mechanism and its instrumentation.
 
@@ -111,12 +111,12 @@ If the message creation context cannot be attached to the message and propagated
 consumer traces cannot be directly correlated to producer traces.
 
 A producer SHOULD attach a message creation context to each message.
-The message creation context SHOULD be attached in a way so that it is
+The message creation context SHOULD be attached in such a way that it is
 not possible to be changed by intermediaries.
 
 > This document does not specify the exact mechanisms on how the creation context
 is attached/extracted to/from messages. Future versions of these conventions
-will give clear recommendations, following industry standards such as
+will give clear recommendations, following industry standards including, but not limited to
 (but not limited to)
 [Trace Context: AMQP protocol](https://w3c.github.io/trace-context-amqp/) and
 [Trace Context: MQTT protocol](https://w3c.github.io/trace-context-mqtt/)
