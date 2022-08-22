@@ -80,6 +80,38 @@ Often such destinations are unnamed or have an auto-generated name.
 
 Given these definitions, the remainder of this section describes the semantic conventions for Spans describing interactions with messaging systems.
 
+### Context propagation
+
+A message may pass many different components and layers in one or more intermediaries
+when it is propagated from the producer to the consumer. It cannot be assumed,
+and in many cases, it is not even desired, that all those components and layers
+are instrumented and propagate context according to OpenTelemetry requirements.
+
+A message creation context allows correlating the producer with the consumer(s)
+of a message, regardless of intermediary instrumentation. The message creation
+context is created by the producer and should be propagated to the consumer(s).
+This context helps to model the dependencies between producers and consumers,
+regardless of the underlying messaging transport mechanism and its instrumentation.
+
+Producer and consumer applications should be instrumented in a way so that
+the creation context is attached to messages and extracted from messages
+in a coordinated way.
+
+If the message creation context cannot be attached to the message and propagated,
+consumer traces cannot be directly correlated to producer traces.
+
+A producer SHOULD attach a message creation context to each message.
+The message creation context SHOULD be attached in a way so that it is
+not possible to be changed by intermediaries.
+
+> This document does not specify the exact mechanisms on how the creation context
+is attached/extracted to/from messages. Future versions of these conventions
+will give clear recommendations, following industry standards such as
+(but not limited to)
+[Trace Context: AMQP protocol](https://w3c.github.io/trace-context-amqp/) and
+[Trace Context: MQTT protocol](https://w3c.github.io/trace-context-mqtt/)
+once those standards reach a stable state.
+
 ### Span name
 
 The span name SHOULD be set to the message destination name and the operation being performed in the following format:
