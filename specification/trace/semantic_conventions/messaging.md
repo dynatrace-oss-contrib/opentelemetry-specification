@@ -104,12 +104,10 @@ of a message and model the dependencies between them,
 regardless of the underlying messaging transport mechanism and its instrumentation.
 
 The message creation context is created by the producer and should be propagated
-to the consumer(s). Producer and consumer applications should be instrumented
-in a way so that the creation context is attached to messages and extracted
-from messages in a coordinated way.
+to the consumer(s).
 
 Consumer traces cannot be directly correlated to producer traces if the message
-creation context cannot be attached and propagated with the message.
+creation context is not attached and propagated with the message.
 
 A producer SHOULD attach a message creation context to each message.
 The message creation context SHOULD be attached in such a way that it is
