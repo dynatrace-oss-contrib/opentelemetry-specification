@@ -83,19 +83,29 @@ Given these definitions, the remainder of this section describes the semantic co
 ### Context propagation
 
 A message may pass many different components and layers in one or more intermediaries
-when it is propagated from the producer to the consumer. It cannot be assumed,
-and in many cases, it is not even desired, that all those components and layers
-are instrumented and propagate context according to OpenTelemetry requirements.
+when it is propagated from the producer to the consumer(s). To be able to correlate
+consumer traces with producer traces using the existing context propagation mechanisms,
+all components must propagate context down the chain.
 
-A message creation context allows correlating the producer with the consumer(s)
-of a message, regardless of intermediary instrumentation. The message creation
-context is created by the producer and should be propagated to the consumer(s).
-This context helps to model the dependencies between producers and consumers,
+This imposes a difficulty because it cannot be assumed, and in many cases,
+it is not even desired, that all components and layers to be instrumented and
+propagate context according to OpenTelemetry requirements.
+
+To be able to correlate consumer traces with producer traces without requiring
+intermediary instrumentation, the context needs to be propagated on a
+*per-message* basis instead of on a *per-request* basis. This allows all components
+to have access to the same per-message context information, making it possible
+to correlate all the stages involved in processing a message with the message's
+creation.
+
+A message *creation context* allows correlating producer with consumer(s)
+of a message and model the dependencies between them,
 regardless of the underlying messaging transport mechanism and its instrumentation.
 
-Producer and consumer applications should be instrumented in a way so that
-the creation context is attached to messages and extracted from messages
-in a coordinated way.
+The message creation context is created by the producer and should be propagated
+to the consumer(s). Producer and consumer applications should be instrumented
+in a way so that the creation context is attached to messages and extracted
+from messages in a coordinated way.
 
 If the message creation context cannot be attached to the message and propagated,
 consumer traces cannot be directly correlated to producer traces.
