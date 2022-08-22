@@ -12,6 +12,7 @@
   * [Conversations](#conversations)
   * [Temporary destinations](#temporary-destinations)
 - [Conventions](#conventions)
+  * [Context propagation](#context-propagation)
   * [Span name](#span-name)
   * [Span kind](#span-kind)
   * [Operation names](#operation-names)
