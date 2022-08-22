@@ -87,9 +87,9 @@ when it is propagated from the producer to the consumer(s). To be able to correl
 consumer traces with producer traces using the existing context propagation mechanisms,
 all components must propagate context down the chain.
 
-This imposes a difficulty because it cannot be assumed, and in many cases,
-it is not even desired, that all components and layers to be instrumented and
-propagate context according to OpenTelemetry requirements.
+This imposes a requirement that all components are instrumented
+and propagate context according to OpenTelemetry requirements. In reality,
+this cannot be assumed, and in many cases is not even desired or possible.
 
 To be able to correlate consumer traces with producer traces without requiring
 intermediary instrumentation, the context needs to be propagated on a
@@ -107,20 +107,19 @@ to the consumer(s). Producer and consumer applications should be instrumented
 in a way so that the creation context is attached to messages and extracted
 from messages in a coordinated way.
 
-If the message creation context cannot be attached to the message and propagated,
-consumer traces cannot be directly correlated to producer traces.
+Consumer traces cannot be directly correlated to producer traces if the message
+creation context cannot be attached and propagated with the message.
 
 A producer SHOULD attach a message creation context to each message.
 The message creation context SHOULD be attached in such a way that it is
 not possible to be changed by intermediaries.
 
 > This document does not specify the exact mechanisms on how the creation context
-is attached/extracted to/from messages. Future versions of these conventions
-will give clear recommendations, following industry standards including, but not limited to
-(but not limited to)
-[Trace Context: AMQP protocol](https://w3c.github.io/trace-context-amqp/) and
-[Trace Context: MQTT protocol](https://w3c.github.io/trace-context-mqtt/)
-once those standards reach a stable state.
+> is attached/extracted to/from messages. Future versions of these conventions
+> will give clear recommendations, following industry standards including, but not limited to
+> [Trace Context: AMQP protocol](https://w3c.github.io/trace-context-amqp/) and
+> [Trace Context: MQTT protocol](https://w3c.github.io/trace-context-mqtt/)
+> once those standards reach a stable state.
 
 ### Span name
 
